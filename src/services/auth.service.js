@@ -1,7 +1,6 @@
-import apiClient from "../api/apiClient"; // Your axios instance
+import apiClient from "../api/axios"; // Your axios instance
 
 export class AuthService {
-  // 1. Create a login method that takes 'data' as an argument
   async login({ email, password }) {
     try {
       const response = await apiClient.post("/user/login", {
@@ -15,52 +14,81 @@ export class AuthService {
     }
   }
 
-  // 2. Create a signup/register method
-  async createAccount({ fullName, email, password, profileImage }) {
+  async signup({ fullName, email, password, profileImage }) {
     const formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("profileImage", profileImage);
 
-    // eslint-disable-next-line no-useless-catch
     try {
-      const userAccount = await apiClient.post("/user/signup", formData);
+      const response = await apiClient.post("/user/signup", formData);
 
-      if (userAccount.data && userAccount.status < 400) {
+      if (response.data && response.status < 400) {
         return this.login({ email, password });
       } else {
-        return userAccount;
+        return response.data;
       }
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
 
-  // 3. Create a logout method
   async logout() {
-    // eslint-disable-next-line no-useless-catch
     try {
-        await apiClient.get("/user/logout")
+      await apiClient.get("/user/logout");
     } catch (error) {
-        throw error
+      console.log();
+      throw error;
     }
   }
 
-  // 4. Create a method to get the current user
-  // (Crucial for keeping the user logged in after a page refresh)
-  async getUserProfile(id) {
+  async verifyEmail({ token }) {
     try {
-        const response = await apiClient.get(`/user/profile/${id}`)
+      const response = await apiClient.post(`user/verify/${token}`);
 
-        return response.data
+      return response.message;
     } catch (error) {
-        console.error("UserService :: getCurrentUser :: error", error);
-        throw error;
+      console.log("UserService :: verifyEmail :: error", error);
+      throw error;
+    }
+  }
+
+  async forgotPassword({ email }) {
+    try {
+      const response = await apiClient.post("user/forgot-password", { email });
+      return response.message;
+    } catch (error) {
+      console.log("UserService :: forgotPassword :: error", error);
+      throw error;
+    }
+  }
+
+  async resetPassword({ token, newPassword }) {
+    try {
+      const response = await apiClient.post(`user/reset-password/${token}`, {
+        newPassword,
+      });
+      return response.message;
+    } catch (error) {
+      console.log("UserService :: resetPassword :: error", error);
+      throw error;
+    }
+  }
+
+  async refreshToken(refreshToken) {
+    try {
+      const response = await apiClient.post("/user/refresh-token", {
+        refreshToken,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("AuthService :: refreshToken :: error", error);
+      throw error;
     }
   }
 }
 
-// Export an instance of the class
 const authService = new AuthService();
 export default authService;

@@ -4,10 +4,9 @@ import conf from "../conf/conf";
 const apiClient = axios.create({
   baseURL: conf.apiUrl,
   withCredentials: true,
-  timeout: 1000, // Set a default timeout
+  // timeout: 1000, // Set a default timeout
   headers: {
     "Content-Type": "application/json",
-    Authorization: "Bearer YOUR_ACCESS_TOKEN",
   },
 });
 
