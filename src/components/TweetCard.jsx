@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeTweet } from "../store/tweetSlice";
 import tweetService from "../services/tweet.service";
+import InteractionBar from "./InteractionBar";
 
 function TweetCard({ tweet }) {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ function TweetCard({ tweet }) {
           <p className="mt-2 text-gray-800 dark:text-gray-200 leading-normal">
             {tweet.content}
           </p>
+          <InteractionBar tweet={tweet} />
         </div>
       </div>
     </div>

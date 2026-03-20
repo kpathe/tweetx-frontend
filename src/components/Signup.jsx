@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../store/authSlice";
-import { Button, Input, Logo } from "./index";
+import { Button, Input } from "./index";
 import { useDispatch } from "react-redux";
 import authService from "../services/auth.service";
 import userService from "../services/user.service";
@@ -21,12 +21,13 @@ function Signup() {
       formData.append("email", data.email);
       formData.append("password", data.password);
 
-     
-      if (data.avatar && data.avatar[0]) {
-        formData.append("avatar", data.avatar[0]);
+      if (data.profileImage && data.profileImage[0]) {
+        formData.append("profileImage", data.profileImage[0]);
       }
 
-      
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
       const session = await authService.signup(formData);
       if (session) {
         const userData = await userService.getCurrentUser();

@@ -14,18 +14,15 @@ export class AuthService {
     }
   }
 
-  async signup({ fullName, email, password, profileImage }) {
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("profileImage", profileImage);
-
+  async signup(data) {
     try {
-      const response = await apiClient.post("/user/signup", formData);
+      const response = await apiClient.post("/user/signup", data);
 
       if (response.data && response.status < 400) {
-        return this.login({ email, password });
+        return this.login({
+          email: data.get("email"),
+          password: data.get("password"),
+        });
       } else {
         return response.data;
       }
