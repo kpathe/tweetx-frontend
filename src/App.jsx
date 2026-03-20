@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import userService from "../src/services/user.service";
 import { useDispatch } from "react-redux";
-import { login, logout } from "./store/authSlice"; // Import the actions!
+import { login, logout } from "./store/authSlice"; 
 import { Outlet } from "react-router-dom";
 
 function App() {
@@ -9,7 +9,6 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // We call the service and handle the Promise
     userService
       .getCurrentUser()
       .then((userData) => {
@@ -34,7 +33,6 @@ function App() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900">
       <div className="w-full block">
-        <h1 className="text-amber-300">TweetX</h1>
         <Outlet />
       </div>
     </div>

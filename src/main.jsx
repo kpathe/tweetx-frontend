@@ -6,40 +6,44 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-
 import Protected from "./components/AuthLayout.jsx";
 import MainLayout from "./components/MainLayout.jsx";
-import Home from "./pages/Home.jsx";
-import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx";
-
+import { Home, Login, Signup, Search, Profile , TweetPage} from "./pages/index.js";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      // 1. THE PROTECTED ZONE (Requires Login)
+      // --- THE PROTECTED ZONE (Sidebar stays visible) ---
       {
         path: "/",
         element: (
           <Protected authentication={true}>
-            <MainLayout /> 
+            <MainLayout />
           </Protected>
         ),
         children: [
           {
-            path: "", // Renders at tweetx.com/
+            path: "", // Home Feed: tweetx.com/
             element: <Home />,
           },
-          // {
-          //   path: "profile/:username", // Renders at tweetx.com/profile/shashwat
-          //   element: <Profile />,
-          // },
+          {
+            path: "search", // Search: tweetx.com/search
+            element: <Search />,
+          },
+          {
+            path: "profile/:username", // Profile: tweetx.com/profile/shashwat
+            element: <Profile />,
+          },
+          {
+            path: "tweet/:tweetId", // Detail: tweetx.com/tweet/67a8b...
+            element: <TweetPage />,
+          },
         ],
       },
 
-      // 2. THE PUBLIC ZONE (Forbidden if logged in)
+      // --- THE PUBLIC ZONE (No Sidebar) ---
       {
         path: "/login",
         element: (
@@ -65,5 +69,5 @@ createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );
