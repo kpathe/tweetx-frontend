@@ -16,7 +16,18 @@ function Signup() {
   const signup = async (data) => {
     setError("");
     try {
-      const session = await authService.signup(data);
+      const formData = new FormData();
+      formData.append("fullName", data.fullName);
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+
+     
+      if (data.avatar && data.avatar[0]) {
+        formData.append("avatar", data.avatar[0]);
+      }
+
+      
+      const session = await authService.signup(formData);
       if (session) {
         const userData = await userService.getCurrentUser();
         if (userData) {
@@ -35,9 +46,9 @@ function Signup() {
 
         <form onSubmit={handleSubmit(signup)}>
           <Input
-            label="Name"
+            label="Full Name"
             placeholder="Enter your full name"
-            {...register("name", { required: true })}
+            {...register("fullName", { required: true })}
           />
           <Input
             label="Email : "
@@ -54,10 +65,17 @@ function Signup() {
           />
           <Input
             label="Password"
+            type="password"
             placeholder="Your password"
             {...register("password", { required: true })}
           />
-          <Input label="Profile Image" placeholder="Upload kadak DP" />
+          <Input
+            label="Profile Image"
+            accept="image/png, image/jpg, image/jpeg"
+            type="file"
+            placeholder="Upload kadak DP"
+            {...register("profileImage", {})}
+          />
 
           <Button type="submit" className="w-full">
             Create Account
