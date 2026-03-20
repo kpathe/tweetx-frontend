@@ -34,7 +34,7 @@ function App() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900">
       <div className="w-full block">
-        <h1>TweetX</h1>
+        <h1 className="text-amber-300">TweetX</h1>
         <Outlet />
       </div>
     </div>
