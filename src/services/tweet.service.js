@@ -1,4 +1,4 @@
-import apiClient from "./apiClient";
+import apiClient from "../api/axios";
 
 class TweetService {
   async createTweet({ content, image }) {
