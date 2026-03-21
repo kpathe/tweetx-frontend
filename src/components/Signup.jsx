@@ -18,6 +18,7 @@ function Signup() {
     try {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
+      formData.append("username", data.username);
       formData.append("email", data.email);
       formData.append("password", data.password);
 
@@ -51,6 +52,12 @@ function Signup() {
             placeholder="Enter your full name"
             {...register("fullName", { required: true })}
           />
+
+          <Input
+            label="Username"
+            placeholder="Enter a username"
+            {...register("username", { required: true })}
+          />
           <Input
             label="Email : "
             placeholder="Enter your email"
@@ -82,6 +89,10 @@ function Signup() {
             Create Account
           </Button>
         </form>
+      </div>
+
+      <div>
+        <p>{error}</p>
       </div>
     </div>
   );
