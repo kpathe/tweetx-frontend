@@ -14,13 +14,13 @@ function Login() {
   const [error, setError] = useState("");
 
   const login = async (data) => {
-    console.log(data);
+    // console.log(data);
     setError("");
     try {
       const session = await authService.login(data);
       if (session) {
         const userData = await userService.getCurrentUser();
-        console.log(userData);
+        // console.log(userData);
 
         if (userData) {
           dispatch(authLogin(userData));
@@ -64,6 +64,9 @@ function Login() {
             </Button>
           </div>
         </form>
+      </div>
+      <div>
+        <p>{error}</p>
       </div>
     </div>
   );
