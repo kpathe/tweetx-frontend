@@ -12,6 +12,8 @@ import Login from "./Login";
 import Signup from "./Signup";
 import MainLayout from "./MainLayout";
 import AuthToggle from "./AuthToggle";
+import SearchInput from "./SearchInput";
+import FeedTabs from "./FeedTabs";
 
 export {
   Input,
@@ -28,4 +30,6 @@ export {
   Signup,
   MainLayout,
   AuthToggle,
+  SearchInput,
+  FeedTabs,
 };
