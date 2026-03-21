@@ -1,13 +1,9 @@
 import apiClient from "../api/axios";
 
 class TweetService {
-  async createTweet({ content, image }) {
-    const formData = new FormData();
-    if (content) formData.append("content", content);
-    if (image) formData.append("image", image);
-
+  async createTweet(data) {
     try {
-      const response = await apiClient.post("/tweet", formData);
+      const response = await apiClient.post("/tweet", data);
       return response.data;
     } catch (error) {
       console.error("TweetService :: createTweet :: error", error);

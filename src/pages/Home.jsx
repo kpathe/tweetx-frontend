@@ -1,33 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTweets, setLoading } from "../store/tweetSlice";
-import { PostForm, TweetCard, Container } from "../components";
+import { PostForm, TweetCard, Container, FeedTabs } from "../components";
 import feedService from "../services/feed.service";
 
 function Home() {
+  const [activeTab, setActiveTab] = useState("For you");
   const dispatch = useDispatch();
-  const tweets = useSelector((state) => state.tweet.allTweets);
-  console.log(tweets);
+  const tweets = useSelector((state) => state.tweet?.allTweets || []);
+  // console.log(tweets);
   const loading = useSelector((state) => state.tweet.loading);
 
   useEffect(() => {
-    const fetchTweets = async () => {
+    const fetchSelectedFeed = async () => {
       dispatch(setLoading(true));
       try {
-        const response = await feedService.getHomeFeed();
-        console.log(response.data);
+        let response;
+        if (activeTab === "For you") {
+          response = await feedService.getHomeFeed(); // Your random/algo feed
+        } else {
+          response = await feedService.getFeed(); // Feed from followed users
+        }
+
         if (response) {
-          dispatch(setTweets(response.data));
+          dispatch(setTweets(response)); // This fills your 'allTweets' array
         }
       } catch (error) {
-        console.error("Home :: fetchTweets :: error", error);
+        console.error("Error fetching feed:", error);
       } finally {
         dispatch(setLoading(false));
       }
     };
 
-    fetchTweets();
-  }, [dispatch]);
+    fetchSelectedFeed();
+  }, [activeTab, dispatch]);
 
   if (loading)
     return (
@@ -39,13 +45,13 @@ function Home() {
   return (
     <div className="w-full">
       <div className="px-4 py-3 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-10">
-        <h1 className="text-xl font-bold dark:text-white">Home</h1>
+        <FeedTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
       <PostForm />
 
       <div className="flex flex-col">
-        {tweets.length > 0 ? (
+        {tweets?.length > 0 ? (
           tweets.map((tweet) => <TweetCard key={tweet._id} tweet={tweet} />)
         ) : (
           <div className="p-10 text-center text-gray-500">

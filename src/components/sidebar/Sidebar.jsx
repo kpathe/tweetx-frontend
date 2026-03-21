@@ -2,63 +2,66 @@ import React from "react";
 import { Container, LogoutBtn } from "../index";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Home, Search, Bell, UserPlus, User } from "lucide-react";
 
 function Sidebar() {
   const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
+  const location = useLocation(); // 👈 Hook to get the current URL
 
   const navItems = [
-    {
-      name: "Home",
-      slug: "/",
-      active: true,
-    },
-    {
-      name: "Search",
-      slug: "/search",
-      active: true,
-    },
-    {
-      name: "Notification",
-      slug: "/notifications",
-      active: true,
-    },
-    {
-      name: "Follow",
-      slug: "/follow",
-      active: true,
-    },
-    {
-      name: "Profile",
-      slug: "/profile",
-      active: true,
-    },
+    { name: "Home", slug: "/", icon: Home },
+    { name: "Search", slug: "/search", icon: Search },
+    { name: "Notifications", slug: "/notifications", icon: Bell },
+    { name: "Follow", slug: "/follow", icon: UserPlus },
+    { name: "Profile", slug: "/profile", icon: User },
   ];
+
+  console.log(authStatus);
   return (
-    <section>
-      <Container>
-        <nav>
-          <div>
-            <Link to="/">{/* Logo */}</Link>
-          </div>
+    <nav className="flex flex-col h-full space-y-2">
+      <div className="mb-4 px-4 py-2">
+        <Link
+          to="/"
+          className="inline-block p-3 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-full transition-all"
+        >
+          <div className="w-8 h-8 bg-black dark:bg-white rounded-sm" />
+        </Link>
+      </div>
 
-          <ul>
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <button onClick={() => navigate(item.slug)}>{item.name}</button>
-              </li>
-            ))}
-          </ul>
+      <ul className="flex flex-col space-y-1 w-full">
+        {navItems.map((item) => {
+          
+          const isActive = location.pathname === item.slug;
 
-          {authStatus && (
-            <li>
-              <LogoutBtn />
+          return (
+            <li key={item.name}>
+              <button
+                onClick={() => navigate(item.slug)}
+                className={`flex items-center gap-4 px-4 py-3 w-fit text-xl hover:bg-gray-200 dark:hover:bg-slate-800 rounded-full transition-all group ${
+                  isActive ? "font-bold" : "font-medium"
+                }`}
+              >
+                <item.icon
+                  className={`w-7 h-7 transition-all ${
+                    isActive
+                      ? "text-[#000000] stroke-[3px]"
+                      : "dark:text-white stroke-[2px]"
+                  }`}
+                />
+              </button>
             </li>
-          )}
-        </nav>
-      </Container>
-    </section>
+          );
+        })}
+
+        {authStatus && (
+          <li className="pt-4">
+            <LogoutBtn />
+          </li>
+        )}
+      </ul>
+    </nav>
   );
 }
 

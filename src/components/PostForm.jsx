@@ -1,20 +1,66 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTweet } from "../store/tweetSlice";
 import tweetService from "../services/tweet.service";
-import { Button } from "./index";
+import { Button, Input } from "./index";
 
 function PostForm() {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, watch } = useForm();
   const dispatch = useDispatch();
 
+  const contentValue = watch("content");
+  const imageValue = watch("image");
+
+  const isButtonDisabled =
+    !contentValue?.trim() && (!imageValue || imageValue.length === 0);
+
+  const currentUser = useSelector((state) => state.auth.userData.data.user);
+
   const submit = async (data) => {
+    const hasContent = data.content && data.content.trim().length > 0;
+    const hasImage = data.image && data.image.length > 0;
+
+    if (!hasContent && !hasImage) {
+      return;
+    }
+    const formData = new FormData();
+    console.log(formData);
+
+    // 2. Only append content if it exists
+    if (hasContent) {
+      formData.append("content", data.content);
+    }
+
+    if (hasImage) {
+      formData.append("image", data.image[0]);
+    }
+
     try {
-      const response = await tweetService.createTweet(data);
+      const response = await tweetService.createTweet(formData);
+
       if (response) {
-        dispatch(addTweet(response));
-        reset(); // Clears the textarea
+        // 1. Get the raw tweet from the response
+        const newTweet = response.data?.data || response.data || response;
+
+        // 2. THE PATCH: Manually add the author object from our Auth State
+        // This ensures the TweetCard has the data it needs to render immediately
+        const tweetWithAuthor = {
+          ...newTweet,
+          author: {
+            _id: currentUser._id,
+            fullName: currentUser.fullName,
+            username: currentUser.username,
+            profileImage: currentUser.profileImage,
+          },
+          likesCount: 0,
+          commentsCount: 0,
+          isLiked: false,
+        };
+
+        // 3. Dispatch the "Complete" tweet
+        dispatch(addTweet(tweetWithAuthor));
+        reset();
       }
     } catch (error) {
       console.error("PostForm :: submit :: error", error);
@@ -29,13 +75,18 @@ function PostForm() {
       <div className="flex gap-4">
         <div className="flex-1">
           <textarea
-            {...register("content", { required: true })}
+            {...register("content")}
             className="w-full bg-transparent text-xl outline-none resize-none dark:text-white"
             placeholder="What's happening?!"
             rows="3"
           />
+          <Input label="Image" type="file" {...register("image")} />
           <div className="flex justify-end mt-2">
-            <Button type="submit" className="rounded-full px-6 font-bold">
+            <Button
+              disabled={isButtonDisabled}
+              type="submit"
+              className="rounded-full px-6 font-bold disabled:opacity-50 disabled:cursor-default"
+            >
               Tweet
             </Button>
           </div>
