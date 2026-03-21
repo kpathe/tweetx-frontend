@@ -7,9 +7,11 @@ import Sidebar from "./sidebar/Sidebar";
 import PostForm from "./PostForm";
 import TweetCard from "./TweetCard";
 import TweetDetailCard from "./TweetDetailCard";
-import AuthLayout from "./AuthLayout";
+import Protected from "./AuthLayout";
 import Login from "./Login";
 import Signup from "./Signup";
+import MainLayout from "./MainLayout";
+import AuthToggle from "./AuthToggle";
 
 export {
   Input,
@@ -21,7 +23,9 @@ export {
   PostForm,
   TweetCard,
   TweetDetailCard,
-  AuthLayout,
+  Protected,
   Login,
   Signup,
+  MainLayout,
+  AuthToggle,
 };
