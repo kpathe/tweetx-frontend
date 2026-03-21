@@ -8,7 +8,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { Protected, AuthToggle } from "./components/index.js";
 import {
-  Home,
   Login,
   Signup,
   Search,
