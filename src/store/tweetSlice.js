@@ -10,10 +10,16 @@ const tweetSlice = createSlice({
   initialState,
   reducers: {
     setTweets: (state, action) => {
-      state.allTweets = action.payload;
+      state.allTweets = action.payload.data || [];
     },
     addTweet: (state, action) => {
-      state.allTweets.unshift(action.payload);
+      const newTweet = action.payload.data || action.payload;
+    
+      if (Array.isArray(state.allTweets)) {
+        state.allTweets.unshift(newTweet);
+      } else {
+        state.allTweets = [newTweet];
+      }
     },
     removeTweet: (state, action) => {
       state.allTweets = state.allTweets.filter(
