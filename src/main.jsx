@@ -6,44 +6,56 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Protected from "./components/AuthLayout.jsx";
-import MainLayout from "./components/MainLayout.jsx";
-import { Home, Login, Signup, Search, Profile , TweetPage} from "./pages/index.js";
+import { Protected, AuthToggle } from "./components/index.js";
+import {
+  Home,
+  Login,
+  Signup,
+  Search,
+  Profile,
+  TweetPage,
+} from "./pages/index.js";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      // --- THE PROTECTED ZONE (Sidebar stays visible) ---
+      // 1. THE SMART ROOT
+      // This handles the "/" path dynamically using the toggle
       {
         path: "/",
-        element: (
-          <Protected authentication={true}>
-            <MainLayout />
-          </Protected>
-        ),
-        children: [
-          {
-            path: "", // Home Feed: tweetx.com/
-            element: <Home />,
-          },
-          {
-            path: "search", // Search: tweetx.com/search
-            element: <Search />,
-          },
-          {
-            path: "profile/:username", // Profile: tweetx.com/profile/shashwat
-            element: <Profile />,
-          },
-          {
-            path: "tweet/:tweetId", // Detail: tweetx.com/tweet/67a8b...
-            element: <TweetPage />,
-          },
-        ],
+        element: <AuthToggle />,
       },
 
-      // --- THE PUBLIC ZONE (No Sidebar) ---
+      // 2. SPECIFIC PROTECTED ROUTES
+      // These still need the Sidebar/MainLayout wrapper
+      {
+        path: "/search",
+        element: (
+          <Protected authentication={true}>
+            <Search />
+          </Protected>
+        ),
+      },
+      {
+        path: "/profile/:username",
+        element: (
+          <Protected authentication={true}>
+            <Profile />
+          </Protected>
+        ),
+      },
+      {
+        path: "/tweet/:tweetId",
+        element: (
+          <Protected authentication={true}>
+            <TweetPage />
+          </Protected>
+        ),
+      },
+
+      // 3. THE AUTH GATES (Public Only)
       {
         path: "/login",
         element: (
