@@ -7,15 +7,12 @@ function AuthToggle() {
   const authStatus = useSelector((state) => state.auth.status);
 
   if (authStatus) {
-    // Logged in: Show the Feed inside the Sidebar layout
     return (
       <MainLayout>
         <Home />
       </MainLayout>
     );
   }
-
-  // Not logged in: Show the clean Landing page
   return <Landing />;
 }
 
