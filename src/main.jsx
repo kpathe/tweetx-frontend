@@ -6,14 +6,8 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { Protected, AuthToggle } from "./components/index.js";
-import {
-  Login,
-  Signup,
-  Search,
-  Profile,
-  TweetPage,
-} from "./pages/index.js";
+import { Protected, AuthToggle,MainLayout } from "./components/index.js";
+import { Login, Signup, Search, Profile, TweetPage } from "./pages/index.js";
 
 const router = createBrowserRouter([
   {
@@ -38,10 +32,12 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/profile/:username",
+        path: "/:username",
         element: (
           <Protected authentication={true}>
-            <Profile />
+            <MainLayout>
+              <Profile />
+            </MainLayout>
           </Protected>
         ),
       },
