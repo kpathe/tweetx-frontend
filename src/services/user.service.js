@@ -11,9 +11,9 @@ class UserService {
     }
   }
 
-  async getProfile(userId) {
+  async getProfile(username) {
     try {
-      const response = await apiClient.get(`/user/profile/${userId}`);
+      const response = await apiClient.get(`/user/profile/${username}`);
       return response.data;
     } catch (error) {
       console.error("UserService :: getProfile :: error", error);
