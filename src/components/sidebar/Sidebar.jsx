@@ -8,14 +8,16 @@ import { Home, Search, Bell, UserPlus, User } from "lucide-react";
 function Sidebar() {
   const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
-  const location = useLocation(); // 👈 Hook to get the current URL
+  const location = useLocation();
+  const userData = useSelector((state) => state.auth.userData);
+  const username = userData?.data?.user?.username || "me";
 
   const navItems = [
     { name: "Home", slug: "/", icon: Home },
     { name: "Search", slug: "/search", icon: Search },
     { name: "Notifications", slug: "/notifications", icon: Bell },
     { name: "Follow", slug: "/follow", icon: UserPlus },
-    { name: "Profile", slug: "/profile", icon: User },
+    { name: "Profile", slug: `/${username}`, icon: User },
   ];
 
   console.log(authStatus);
@@ -32,7 +34,6 @@ function Sidebar() {
 
       <ul className="flex flex-col space-y-1 w-full">
         {navItems.map((item) => {
-          
           const isActive = location.pathname === item.slug;
 
           return (
