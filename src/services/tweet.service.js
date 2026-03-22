@@ -13,7 +13,7 @@ class TweetService {
 
   async getTweet(tweetId) {
     try {
-      const response = await apiClient.get(`/tweet/${tweetId}`);
+      const response = await apiClient.get(`/tweet/t/${tweetId}`);
       return response.data;
     } catch (error) {
       console.error("TweetService :: getTweet :: error", error);
@@ -27,6 +27,16 @@ class TweetService {
       return response.data;
     } catch (error) {
       console.error("TweetService :: deleteTweet :: error", error);
+      throw error;
+    }
+  }
+
+  async getUserTweets(username) {
+    try {
+      const response = await apiClient.get(`/tweet/u/${username}`);
+      return response.data;
+    } catch (error) {
+      console.error("TweetService :: getUserTweets :: error", error);
       throw error;
     }
   }
