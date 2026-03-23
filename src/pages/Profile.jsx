@@ -18,7 +18,6 @@ function Profile() {
         console.log(userProfile.data);
         if (userProfile) setUser(userProfile?.data);
 
-        // 2. Fetch only THIS user's tweets
         const tweets = await tweetService.getUserTweets(username);
         console.log(tweets)
         if (tweets) setUserTweets(tweets?.data);
@@ -42,7 +41,7 @@ function Profile() {
       {/* User Info */}
       <div className="px-4 -mt-12 mb-6">
         <img
-          src={user?.avatar || "https://via.placeholder.com/150"}
+          src={user?.avatar || "https://placehold.co/150"}
           className="h-24 w-24 rounded-full border-4 border-white dark:border-slate-900 object-cover"
         />
         <div className="mt-3">
