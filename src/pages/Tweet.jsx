@@ -11,7 +11,7 @@ function TweetPage() {
     useEffect(() => {
         const fetchTweet = async () => {
             try {
-                const data = await tweetService.getTweetById(tweetId)
+                const data = await tweetService.getTweet(tweetId)
                 if (data) setTweet(data)
             } catch (err) {
                 console.error(err)
