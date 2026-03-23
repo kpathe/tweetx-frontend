@@ -17,18 +17,18 @@ function Sidebar() {
     { name: "Search", slug: "/search", icon: Search },
     { name: "Notifications", slug: "/notifications", icon: Bell },
     { name: "Follow", slug: "/follow", icon: UserPlus },
-    { name: "Profile", slug: `/${username}`, icon: User },
+    { name: "Profile", slug: `/u/${username}`, icon: User },
   ];
 
-  console.log(authStatus);
+
   return (
     <nav className="flex flex-col h-full space-y-2">
       <div className="mb-4 px-4 py-2">
-        <Link
-          to="/"
-          className="inline-block p-3 hover:bg-gray-200 dark:hover:bg-slate-800 rounded-full transition-all"
-        >
-          <div className="w-8 h-8 bg-black dark:bg-white rounded-sm" />
+        <Link to="/">
+          <img width="35px"
+            src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg"
+            alt=""
+          />
         </Link>
       </div>
 
