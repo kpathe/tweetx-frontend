@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTweet } from "../store/tweetSlice";
 import tweetService from "../services/tweet.service";
 import { Button, Input } from "./index";
+import { ImageIcon } from "lucide-react";
 
 function PostForm() {
   const { register, handleSubmit, reset, watch } = useForm();
@@ -80,8 +81,24 @@ function PostForm() {
             placeholder="What's happening?!"
             rows="3"
           />
-          <Input label="Image" type="file" {...register("image")} />
+
           <div className="flex justify-end mt-2">
+            <label
+              htmlFor="tweet-image"
+              className="p-2 text-[#1d9bf0]  dark:hover:bg-slate-800 rounded-full cursor-pointer transition-all"
+              title="Add image"
+            >
+              <ImageIcon size={22} />
+
+              {/* 2. The Actual Input is visually hidden but functional */}
+              <input
+                id="tweet-image"
+                type="file"
+                className="hidden" // 👈 This hides the "No file chosen" text
+                accept="image/*"
+                {...register("image")}
+              />
+            </label>
             <Button
               disabled={isButtonDisabled}
               type="submit"
