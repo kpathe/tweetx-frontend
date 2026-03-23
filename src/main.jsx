@@ -6,8 +6,16 @@ import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { Protected, AuthToggle,MainLayout } from "./components/index.js";
-import { Login, Signup, Search, Profile, TweetPage } from "./pages/index.js";
+import { Protected, AuthToggle, MainLayout } from "./components/index.js";
+import {
+  Login,
+  Signup,
+  Search,
+  Profile,
+  TweetPage,
+  Connect,
+  Notifications,
+} from "./pages/index.js";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +40,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/:username",
+        path: "/u/:username",
         element: (
           <Protected authentication={true}>
             <MainLayout>
@@ -42,10 +50,32 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/follow",
+        element: (
+          <Protected authentication={true}>
+            <MainLayout>
+              <Connect />
+            </MainLayout>
+          </Protected>
+        ),
+      },
+      {
+        path: "/notifications",
+        element: (
+          <Protected authentication={true}>
+            <MainLayout>
+              <Notifications />
+            </MainLayout>
+          </Protected>
+        ),
+      },
+      {
         path: "/tweet/:tweetId",
         element: (
           <Protected authentication={true}>
-            <TweetPage />
+            <MainLayout>
+              <TweetPage />
+            </MainLayout>
           </Protected>
         ),
       },
