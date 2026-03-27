@@ -21,11 +21,12 @@ class UserService {
     }
   }
 
-  async editProfile({ newFullName, newEmail, profileImage }) {
+  async editProfile({ newFullName, newEmail, profileImage, newBio }) {
     const formData = new FormData();
     if (newFullName) formData.append("newFullName", newFullName);
     if (newEmail) formData.append("newEmail", newEmail);
     if (profileImage) formData.append("profileImage", profileImage);
+    if (newBio) formData.append("newBio", newBio);
 
     try {
       const response = await apiClient.post("/user/edit-profile", formData);

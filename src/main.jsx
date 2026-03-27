@@ -16,6 +16,7 @@ import {
   Connect,
   Notifications,
 } from "./pages/index.js";
+import EditProfile from "./pages/EditProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,16 @@ const router = createBrowserRouter([
           <Protected authentication={true}>
             <MainLayout>
               <TweetPage />
+            </MainLayout>
+          </Protected>
+        ),
+      },
+      {
+        path: "/edit-profile",
+        element: (
+          <Protected authentication={true}>
+            <MainLayout>
+              <EditProfile />
             </MainLayout>
           </Protected>
         ),

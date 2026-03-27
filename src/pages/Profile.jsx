@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import tweetService from "../services/tweet.service";
 import userService from "../services/user.service";
@@ -19,10 +19,17 @@ function Profile() {
       setLoading(true);
       try {
         const userProfile = await userService.getProfile(username);
+
+        // Inside your useEffect
         if (userProfile?.data) {
           setUser(userProfile.data);
-          // Assuming your backend sends this boolean
-          setIsFollowing(userProfile.data.isFollowing || false);
+
+          // 1. Check if the logged-in user's username exists in the followers array
+          const isMeInFollowers = userProfile.data.followers.some(
+            (follower) => follower.username === loggedInUser?.username,
+          );
+
+          setIsFollowing(isMeInFollowers);
         }
 
         const tweets = await tweetService.getUserTweets(username);
@@ -36,13 +43,20 @@ function Profile() {
       }
     };
     fetchProfileData();
-  }, [username]);
+  }, [loggedInUser?.username, username]);
 
   const handleFollowToggle = async () => {
     const previousState = isFollowing;
 
     try {
       setIsFollowing(!previousState);
+
+      setUser((prev) => ({
+        ...prev,
+        followersCount: previousState
+          ? prev.followersCount - 1 // If we were following, decrement
+          : prev.followersCount + 1, // If we weren't, increment
+      }));
 
       if (previousState) {
         await userService.unfollow(user?._id);
@@ -51,6 +65,12 @@ function Profile() {
       }
     } catch (error) {
       setIsFollowing(previousState);
+      setUser((prev) => ({
+        ...prev,
+        followersCount: previousState
+          ? prev.followersCount + 1
+          : prev.followersCount - 1,
+      }));
       console.error("Follow/Unfollow failed:", error);
     }
   };
@@ -60,7 +80,7 @@ function Profile() {
       <div className="p-10 text-center dark:text-white">Loading Profile...</div>
     );
 
-  const isOwnProfile = loggedInUser?.username === username;
+  const isOwnProfile = loggedInUser?.data?.user?.username === username;
 
   return (
     <div className="w-full min-h-screen bg-white dark:bg-slate-900">
@@ -77,9 +97,11 @@ function Profile() {
         {/* Action Button Area */}
         <div className="absolute -bottom-14 right-4">
           {isOwnProfile ? (
-            <button className="px-5 py-2 rounded-full font-bold border border-gray-300 dark:border-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-all">
-              Edit profile
-            </button>
+            <Link to="/edit-profile">
+              <button className="px-5 py-2 rounded-full font-bold border border-gray-300 dark:border-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-all">
+                Edit profile
+              </button>
+            </Link>
           ) : (
             <button
               onClick={handleFollowToggle}
