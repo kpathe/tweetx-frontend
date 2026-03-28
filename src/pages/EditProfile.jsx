@@ -43,7 +43,7 @@ function EditProfile() {
         newFullName: data.fullName,
         newEmail: data.email || userData?.email,
         profileImage: data.profileImage?.[0] || null,
-        newBio : data.bio
+        newBio: data.bio,
       };
 
       const response = await userService.editProfile(updatePayload);
@@ -93,7 +93,7 @@ function EditProfile() {
             <img
               src={preview}
               className="w-32 h-32 rounded-full object-cover border-4 border-[#1d9bf0] brightness-90 group-hover:brightness-75 transition-all"
-              alt="Preview"
+              alt=""
             />
             <label
               htmlFor="image-upload"
@@ -119,7 +119,7 @@ function EditProfile() {
           <Input
             label="Display Name"
             placeholder="Your name"
-            {...register("fullName", { required: "Name is required" })}
+            {...register("fullName")}
           />
 
           <div className="flex flex-col gap-2">
