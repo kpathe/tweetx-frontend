@@ -1,20 +1,28 @@
 import React from "react";
 import InteractionBar from "./InteractionBar";
+import { Link } from "react-router-dom";
 
 function TweetDetailCard({ tweet }) {
+  console.log(tweet);
   return (
     <div className="p-4 border-b border-gray-200 dark:border-gray-800">
       <div className="flex items-center gap-3 mb-4">
-        <img
-          src={tweet?.data?.owner?.avatar || "https://placehold.co/400"}
-          className="h-14 w-14 rounded-full"
-          alt="avatar"
-        />
+        <Link to={`/u/${tweet?.data?.author?.username}`}>
+          <img
+            src={tweet?.data?.author?.avatar || "https://placehold.co/400"}
+            className="h-14 w-14 rounded-full"
+            alt="avatar"
+          />
+        </Link>
         <div>
-          <p className="font-bold text-lg dark:text-white">
-            {tweet?.data?.author?.name}
-          </p>
-          <p className="text-gray-500">@{tweet?.data?.author?.username}</p>
+          <Link to={`/u/${tweet?.data?.author?.username}`}>
+            <p className="font-bold text-lg dark:text-white">
+              {tweet?.data?.author?.name}
+            </p>
+          </Link>
+          <Link to={`/u/${tweet?.data?.author?.username}`}>
+            <p className="text-gray-500">@{tweet?.data?.author?.username}</p>
+          </Link>
         </div>
       </div>
 
