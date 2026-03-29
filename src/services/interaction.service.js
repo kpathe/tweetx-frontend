@@ -1,4 +1,4 @@
-import apiClient from "./apiClient";
+import apiClient from "../api/axios";
 
 class InteractionService {
   async toggleTweetLike(tweetId) {
@@ -13,7 +13,10 @@ class InteractionService {
 
   async addComment(tweetId, content) {
     try {
-      const response = await apiClient.post(`/comment/${tweetId}`, { content });
+      const formData = new FormData();
+      formData.append("content", content); // 👈 Append the string directly
+
+      const response = await apiClient.post(`/comment/${tweetId}`, formData);
       return response.data;
     } catch (error) {
       console.error("InteractionService :: addComment :: error", error);

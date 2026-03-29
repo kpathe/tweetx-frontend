@@ -21,8 +21,8 @@ function Notifications() {
 
   return (
     <div className="w-full">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-10">
-        <h1 className="text-xl font-bold">Notifications</h1>
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-slate-950 backdrop-blur-md z-10">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Notifications</h1>
       </div>
 
       <div className="divide-y divide-gray-200 dark:divide-gray-800">

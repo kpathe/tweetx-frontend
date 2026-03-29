@@ -14,6 +14,9 @@ import MainLayout from "./MainLayout";
 import AuthToggle from "./AuthToggle";
 import SearchInput from "./SearchInput";
 import FeedTabs from "./FeedTabs";
+import CommentCard from "./CommentCard";
+import Spinner from "./Spinner";
+import MobileBottomNav from "./MobileBottomNav";
 
 export {
   Input,
@@ -32,4 +35,7 @@ export {
   AuthToggle,
   SearchInput,
   FeedTabs,
+  CommentCard,
+  Spinner,
+  MobileBottomNav,
 };

@@ -1,1 +1,316 @@
 @import "tailwindcss";
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --bg-tertiary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border-color: #e5e7eb;
+  --border-light: #f3f4f6;
+  --scrollbar-track: #f3f4f6;
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-hover: #9ca3af;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-950: #020617;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+html.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-color: #475569;
+  --border-light: #334155;
+  --scrollbar-track: #1e293b;
+  --scrollbar-thumb: #475569;
+  --scrollbar-hover: #64748b;
+  --slate-800: #0f172a;
+  --slate-700: #1e293b;
+  --slate-950: #020617;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Enhanced Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-hover);
+}
+
+button,
+a {
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Cards and containers in dark mode */
+html.dark .bg-white {
+  background-color: var(--bg-secondary);
+}
+
+html.dark .bg-gray-50 {
+  background-color: var(--bg-secondary);
+}
+
+html.dark .bg-gray-100 {
+  background-color: var(--bg-tertiary);
+}
+
+html.dark .text-gray-900 {
+  color: var(--text-primary);
+}
+
+html.dark .text-gray-800 {
+  color: var(--text-primary);
+}
+
+html.dark .text-gray-700 {
+  color: var(--text-secondary);
+}
+
+html.dark .text-gray-600 {
+  color: var(--text-secondary);
+}
+
+html.dark .text-gray-500 {
+  color: var(--text-tertiary);
+}
+
+/* Animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Override dark: utilities globally */
+html.dark .dark\:bg-slate-950 {
+  background-color: var(--slate-950);
+}
+
+html.dark .dark\:bg-slate-800 {
+  background-color: var(--slate-800);
+}
+
+html.dark .dark\:bg-slate-700 {
+  background-color: var(--slate-700);
+}
+
+html.dark .dark\:text-white {
+  color: var(--text-primary);
+}
+
+html.dark .dark\:text-gray-100 {
+  color: var(--text-primary);
+}
+
+html.dark .dark\:text-gray-200 {
+  color: #e2e8f0;
+}
+
+html.dark .dark\:text-gray-300 {
+  color: #d1d5db;
+}
+
+html.dark .dark\:text-gray-400 {
+  color: var(--text-tertiary);
+}
+
+html.dark .dark\:text-gray-500 {
+  color: #9ca3af;
+}
+
+html.dark .dark\:text-gray-600 {
+  color: var(--text-secondary);
+}
+
+html.dark .dark\:border-gray-700 {
+  border-color: var(--border-color);
+}
+
+html.dark .dark\:border-gray-600 {
+  border-color: var(--border-color);
+}
+
+html.dark .dark\:border-gray-500 {
+  border-color: #9ca3af;
+}
+
+html.dark .dark\:hover\:bg-slate-800:hover {
+  background-color: var(--slate-800);
+}
+
+html.dark .dark\:hover\:bg-slate-700:hover {
+  background-color: var(--slate-700);
+}
+
+html.dark .dark\:hover\:bg-gray-700:hover {
+  background-color: var(--slate-700);
+}
+
+html.dark .dark\:hover\:text-gray-200:hover {
+  color: #e2e8f0;
+}
+
+html.dark .dark\:text-violet-400 {
+  color: #c084fc;
+}
+
+html.dark .dark\:text-violet-500 {
+  color: #a855f7;
+}
+
+html.dark .dark\:bg-violet-900\/30 {
+  background-color: rgba(88, 28, 135, 0.3);
+}
+
+html.dark .dark\:bg-violet-900\/20 {
+  background-color: rgba(88, 28, 135, 0.2);
+}
+
+html.dark .dark\:focus\:ring-violet-500:focus {
+  --tw-ring-color: #a855f7;
+}
+
+html.dark .dark\:ring-gray-700 {
+  border-color: var(--border-color);
+}
+
+html.dark .dark\:ring-slate-700 {
+  border-color: var(--border-color);
+}
+
+/* Enhanced button styles for dark mode */
+html.dark button:not(.bg-violet-600):not(.bg-violet-500) {
+  color: var(--text-primary);
+}
+
+/* Form inputs */
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="password"],
+html.dark textarea,
+html.dark select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+html.dark input[type="text"]:focus,
+html.dark input[type="email"]:focus,
+html.dark input[type="password"]:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: #a855f7;
+}
+
+/* Link hover states */
+html.dark a {
+  color: var(--text-primary);
+}
+
+html.dark a:hover {
+  color: #a855f7;
+}
+
+/* Dropdown and hover background adjustments */
+html.dark .hover\:bg-gray-100:hover {
+  background-color: var(--bg-secondary);
+}
+
+html.dark .hover\:bg-gray-50:hover {
+  background-color: var(--bg-secondary);
+}
+
+html.dark .hover\:bg-gray-200:hover {
+  background-color: var(--bg-tertiary);
+}
+
+/* Modal and overlay */
+html.dark .bg-black {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Smooth backdrop effects */
+html.dark .backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Focus states */
+html.dark *:focus {
+  outline-color: #a855f7;
+}
+
+/* Selection color */
+html.dark ::selection {
+  background-color: rgba(168, 85, 247, 0.3);
+  color: var(--text-primary);
+}
+
+/* Header and sticky elements */
+html.dark .sticky {
+  background-color: var(--bg-primary);
+}
+
+html.dark .bg-white\/80,
+html.dark .bg-slate-900\/80 {
+  background-color: var(--bg-primary);
+}
+
+/* Dividers */
+html.dark .divide-gray-800 {
+  border-color: var(--border-color);
+}
+
+/* Hover effects on list items */
+html.dark .hover\:bg-gray-50:hover {
+  background-color: var(--bg-secondary);
+}
+
+html.dark .hover\:bg-slate-800\/50:hover {
+  background-color: var(--bg-secondary);
+}

@@ -1,16 +1,19 @@
 import React from "react";
-import { Container, LogoutBtn } from "../index";
+import { LogoutBtn } from "../index";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Search, Bell, UserPlus, User } from "lucide-react";
+import { Home, Search, Bell, UserPlus, User, Moon, Sun } from "lucide-react";
+import { light, dark } from "../../store/themeSlice";
 
 function Sidebar() {
   const authStatus = useSelector((state) => state.auth.status);
+  const themeMode = useSelector((state) => state.theme.themeMode);
   const navigate = useNavigate();
   const location = useLocation();
   const userData = useSelector((state) => state.auth.userData);
   const username = userData?.data?.user?.username || "me";
+  const dispatch = useDispatch();
 
   const navItems = [
     { name: "Home", slug: "/", icon: Home },
@@ -20,48 +23,71 @@ function Sidebar() {
     { name: "Profile", slug: `/u/${username}`, icon: User },
   ];
 
+  const toggleTheme = () => {
+    const newMode = themeMode === "light" ? "dark" : "light";
+    dispatch(newMode === "dark" ? dark() : light());
+  };
 
   return (
-    <nav className="flex flex-col h-full space-y-2">
-      <div className="mb-4 px-4 py-2">
-        <Link to="/">
-          <img width="35px"
-            src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg"
-            alt=""
-          />
+    <nav className="flex flex-col h-full w-full px-3 py-4 bg-white dark:bg-slate-950">
+      {/* Logo - Right aligned, same width as nav icons */}
+      <div className="flex justify-end mb-6">
+        <Link
+          to="/"
+          className="flex items-center justify-center w-12 h-12 text-3xl font-bold text-violet-600 dark:text-violet-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-all"
+        >
+          𝕏
         </Link>
       </div>
 
-      <ul className="flex flex-col space-y-1 w-full">
+      {/* Navigation Items - Right aligned */}
+      <ul className="flex flex-col space-y-4 flex-1">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.slug;
+          const isActive =
+            location.pathname === item.slug ||
+            (item.slug === "/" && location.pathname === "/");
 
           return (
-            <li key={item.name}>
+            <li key={item.name} className="flex justify-end">
               <button
                 onClick={() => navigate(item.slug)}
-                className={`flex items-center gap-4 px-4 py-3 w-fit text-xl hover:bg-gray-200 dark:hover:bg-slate-800 rounded-full transition-all group ${
-                  isActive ? "font-bold" : "font-medium"
+                className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 ${
+                  isActive
+                    ? "bg-violet-100 dark:bg-violet-900/30 shadow-md dark:shadow-lg"
+                    : "hover:bg-gray-100 dark:hover:bg-slate-800/50"
                 }`}
+                title={item.name}
               >
                 <item.icon
-                  className={`w-7 h-7 transition-all ${
+                  className={`w-6 h-6 transition-all ${
                     isActive
-                      ? "text-[#000000] stroke-[3px]"
-                      : "dark:text-white stroke-[2px]"
+                      ? "text-violet-600 dark:text-violet-400 stroke-[2.5px]"
+                      : "text-gray-900 dark:text-gray-300 stroke-[2px] hover:text-violet-600 dark:hover:text-violet-400"
                   }`}
                 />
               </button>
             </li>
           );
         })}
-
-        {authStatus && (
-          <li className="pt-4">
-            <LogoutBtn />
-          </li>
-        )}
       </ul>
+
+      {/* Theme Toggle Button - Right aligned */}
+      <div className="flex justify-end mb-2 px-2">
+        <button
+          onClick={toggleTheme}
+          className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors text-gray-900 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
+          title={`Switch to ${themeMode === "light" ? "dark" : "light"} mode`}
+        >
+          {themeMode === "light" ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+      </div>
+
+      {/* Logout Button - Right aligned */}
+      {authStatus && (
+        <div className="flex justify-end">
+          <LogoutBtn />
+        </div>
+      )}
     </nav>
   );
 }

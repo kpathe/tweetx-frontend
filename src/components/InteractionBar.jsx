@@ -1,76 +1,93 @@
-import React, { useState } from "react";
-import interactionService from "../services/tweet.service";
+import React, { useState, useEffect } from "react";
+import { MessageCircle, Heart } from "lucide-react";
+import interactionService from "../services/interaction.service";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import Modal from "./Modal";
+import PostForm from "./PostForm";
 
-function InteractionBar({ tweet }) {
-  const navigate = useNavigate();
+function InteractionBar({ tweet, isCommentCard = false, onCommentAdded }) {
   const currentUser = useSelector((state) => state.auth.userData);
-  console.log(tweet);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(tweet?.commentsCount || 0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Check if current user is in the likes array
-  const [isLiked, setIsLiked] = useState(
-    tweet?.likes?.includes(currentUser?._id),
-  );
-  const [likesCount, setLikesCount] = useState(tweet?.likesCount?.length || 0);
+  useEffect(() => {
+    const hasLiked = tweet?.likes?.includes(currentUser?._id) || tweet?.isLiked;
+    setIsLiked(!!hasLiked);
+    setLikesCount(tweet?.likes?.length || tweet?.likesCount || 0);
+    setCommentsCount(tweet?.commentsCount || 0);
+  }, [tweet, currentUser?._id]);
 
   const handleLike = async (e) => {
-    e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation(); // 🛡️ Stops navigation to Detail page
+    
+    const wasLiked = isLiked;
     try {
-      const response = await interactionService.toggleTweetLike(tweet._id);
-      if (response) {
-        setIsLiked(!isLiked);
-        setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1));
+      setIsLiked(!wasLiked);
+      setLikesCount((prev) => (wasLiked ? prev - 1 : prev + 1));
+      if (isCommentCard) {
+        await interactionService.toggleCommentLike(tweet._id);
+      } else {
+        await interactionService.toggleTweetLike(tweet._id);
       }
     } catch (error) {
-      console.error("Like Toggle Failed", error);
+      setIsLiked(wasLiked);
+      setLikesCount((prev) => (wasLiked ? prev + 1 : prev - 1));
     }
   };
 
   const handleCommentClick = (e) => {
-    e.stopPropagation();
-    navigate(`/tweet/${tweet._id}`);
+    e.preventDefault();
+    e.stopPropagation(); // 🛡️ Stops navigation to Detail page
+    setIsModalOpen(true);
+  };
+
+  const handleCommentSuccess = (newComment) => {
+    setIsModalOpen(false);
+    setCommentsCount(prev => prev + 1);
+    // Call the parent callback if provided
+    if (onCommentAdded) {
+      onCommentAdded(newComment);
+    }
   };
 
   return (
-    <div className="flex justify-between items-center max-w-md mt-3 text-gray-500">
-      {/* Comment */}
-      <button
-        onClick={handleCommentClick}
-        className="flex items-center gap-2 hover:text-blue-500 transition-colors group"
-      >
-        <span className="p-2 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 rounded-full">
-          💬
-        </span>
-        <span className="text-sm">{tweet?.comments?.length || 0}</span>
-      </button>
+    <>
+      <div className="flex justify-between items-center max-w-md mt-3 text-gray-500 dark:text-gray-400">
+        {!isCommentCard && (
+          <button 
+            onClick={handleCommentClick} 
+            className="group flex items-center gap-2 hover:text-violet-600 dark:hover:text-violet-400 outline-none transition-colors"
+          >
+            <div className="p-2 rounded-full group-hover:bg-violet-50 dark:group-hover:bg-violet-900/20 transition-colors">
+              <MessageCircle size={18} />
+            </div>
+            <span className="text-xs font-medium">{commentsCount}</span>
+          </button>
+        )}
 
-      {/* Like */}
-      <button
-        onClick={(e) => handleLike(e)}
-        className={`flex items-center gap-2 transition-colors group ${isLiked ? "text-pink-600" : "hover:text-pink-600"}`}
-      >
-        <span
-          className={`p-2 group-hover:bg-pink-50 dark:group-hover:bg-pink-900/20 rounded-full`}
+        <button 
+          onClick={handleLike} 
+          className={`group flex items-center gap-2 outline-none transition-colors ${
+            isLiked ? "text-red-600 dark:text-red-400" : "hover:text-red-600 dark:hover:text-red-400"
+          }`}
         >
-          {isLiked ? "❤️" : "🤍"}
-        </span>
-        <span className="text-sm">{likesCount}</span>
-      </button>
-
-      {/* Views (Mock/Static for now) */}
-      <div className="flex items-center gap-2 hover:text-blue-400 transition-colors group">
-        <span className="p-2 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 rounded-full">
-          📊
-        </span>
-        <span className="text-sm">{tweet?.viewsCount || 0}</span>
+          <div className="p-2 rounded-full group-hover:bg-red-50 dark:group-hover:bg-red-900/20 transition-colors">
+            <Heart 
+              size={18} 
+              className={isLiked ? "fill-current" : "fill-none"} 
+            />
+          </div>
+          <span className="text-xs font-medium">{likesCount}</span>
+        </button>
       </div>
 
-      {/* Share */}
-      <button className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-500 rounded-full transition-colors">
-        📤
-      </button>
-    </div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <PostForm isComment={true} parentId={tweet._id} onSuccess={handleCommentSuccess} />
+      </Modal>
+    </>
   );
 }
 

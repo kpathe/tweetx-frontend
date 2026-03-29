@@ -22,7 +22,7 @@ function Search() {
   return (
     <MainLayout>
       <div className="py-4 px-4">
-        <div className="p-3 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-10">
+        <div className="p-3 sticky top-0 bg-white dark:bg-slate-950 backdrop-blur-md z-10">
           <SearchInput
             value={query}
             onChange={setQuery}

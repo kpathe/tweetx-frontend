@@ -9,7 +9,7 @@ import { login } from "../store/authSlice";
 
 function EditProfile() {
   const { userData } = useSelector((state) => state.auth);
-  const [preview, setPreview] = useState(userData?.profileImage || "");
+  const [preview, setPreview] = useState(userData?.data?.user?.profileImage || "");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -22,8 +22,8 @@ function EditProfile() {
     formState: { isSubmitting },
   } = useForm({
     defaultValues: {
-      fullName: userData?.fullName || "",
-      bio: userData?.bio || "",
+      fullName: userData?.data?.user?.fullName || "",
+      bio: userData?.data?.user?.bio || "",
     },
   });
 
@@ -41,16 +41,18 @@ function EditProfile() {
     try {
       const updatePayload = {
         newFullName: data.fullName,
-        newEmail: data.email || userData?.email,
+        newEmail: data.email || userData?.data?.user?.email,
         profileImage: data.profileImage?.[0] || null,
         newBio: data.bio,
       };
 
-      const response = await userService.editProfile(updatePayload);
+      await userService.editProfile(updatePayload);
 
-      if (response) {
-        dispatch(login(response.data));
-        navigate(`/u/${userData?.data?.user?.username}`);
+      // Fetch updated user data and dispatch
+      const updatedUserData = await userService.getCurrentUser();
+      if (updatedUserData) {
+        dispatch(login(updatedUserData));
+        navigate(`/u/${updatedUserData?.data?.user?.username}`);
       }
     } catch (err) {
       setError(err.message || "Failed to update profile");

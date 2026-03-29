@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTweets, setLoading } from "../store/tweetSlice";
-import { PostForm, TweetCard, Container, FeedTabs } from "../components";
+import { PostForm, TweetCard, Container, FeedTabs, Spinner } from "../components";
 import feedService from "../services/feed.service";
 
 function Home() {
   const [activeTab, setActiveTab] = useState("For you");
   const dispatch = useDispatch();
   const tweets = useSelector((state) => state.tweet?.allTweets || []);
-  // console.log(tweets);
   const loading = useSelector((state) => state.tweet.loading);
 
   useEffect(() => {
@@ -38,13 +37,15 @@ function Home() {
   if (loading)
     return (
       <Container>
-        <h1>Loading Feed...</h1>
+        <div className="flex justify-center items-center py-12">
+          <Spinner size="lg" className="text-violet-600 dark:text-violet-400" />
+        </div>
       </Container>
     );
 
   return (
     <div className="w-full">
-      <div className="px-4 py-3 sticky top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-10">
+      <div className="px-0 py-0 sticky top-0 bg-white dark:bg-slate-950 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 z-10">
         <FeedTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
@@ -54,8 +55,9 @@ function Home() {
         {tweets?.length > 0 ? (
           tweets.map((tweet) => <TweetCard key={tweet._id} tweet={tweet} />)
         ) : (
-          <div className="p-10 text-center text-gray-500">
-            No tweets yet. Be the first to post!
+          <div className="p-10 text-center text-gray-500 dark:text-gray-400">
+            <p className="text-lg">No tweets yet</p>
+            <p className="text-sm mt-1">Be the first to share something</p>
           </div>
         )}
       </div>

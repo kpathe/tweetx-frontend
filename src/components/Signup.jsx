@@ -11,10 +11,12 @@ function Signup() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const signup = async (data) => {
     setError("");
+    setIsLoading(true);
     try {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
@@ -26,9 +28,6 @@ function Signup() {
         formData.append("profileImage", data.profileImage[0]);
       }
 
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
       const session = await authService.signup(formData);
       if (session) {
         const userData = await userService.getCurrentUser();
@@ -39,61 +38,84 @@ function Signup() {
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
-    <div>
-      <div>
-        {/* logo */}
+    <div className="w-full">
+      <form onSubmit={handleSubmit(signup)} className="space-y-4">
+        <Input
+          label="Full Name"
+          placeholder="Enter your full name"
+          error={errors.fullName?.message}
+          {...register("fullName", { 
+            required: "Full name is required" 
+          })}
+        />
 
-        <form onSubmit={handleSubmit(signup)}>
-          <Input
-            label="Full Name"
-            placeholder="Enter your full name"
-            {...register("fullName", { required: true })}
-          />
+        <Input
+          label="Username"
+          placeholder="Enter a username"
+          error={errors.username?.message}
+          {...register("username", { 
+            required: "Username is required" 
+          })}
+        />
 
-          <Input
-            label="Username"
-            placeholder="Enter a username"
-            {...register("username", { required: true })}
-          />
-          <Input
-            label="Email : "
-            placeholder="Enter your email"
-            type="email"
-            {...register("email", {
-              required: true,
-              validate: {
-                matchPattern: (value) =>
-                  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                  "Email address must be a valid address",
-              },
-            })}
-          />
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Your password"
-            {...register("password", { required: true })}
-          />
-          <Input
-            label="Profile Image"
-            accept="image/png, image/jpg, image/jpeg"
-            type="file"
-            placeholder="Upload kadak DP"
-            {...register("profileImage", {})}
-          />
+        <Input
+          label="Email"
+          placeholder="Enter your email"
+          type="email"
+          error={errors.email?.message}
+          {...register("email", {
+            required: "Email is required",
+            validate: {
+              matchPattern: (value) =>
+                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                "Email address must be a valid address",
+            },
+          })}
+        />
 
-          <Button type="submit" className="w-full">
-            Create Account
-          </Button>
-        </form>
-      </div>
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Choose a strong password"
+          error={errors.password?.message}
+          {...register("password", { 
+            required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters"
+            }
+          })}
+        />
 
-      <div>
-        <p>{error}</p>
-      </div>
+        <Input
+          label="Profile Image (Optional)"
+          accept="image/png, image/jpg, image/jpeg"
+          type="file"
+          placeholder="Upload profile picture"
+          {...register("profileImage", {})}
+        />
+
+        {error && (
+          <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-red-700 dark:text-red-400 text-sm">{error}</p>
+          </div>
+        )}
+
+        <Button 
+          type="submit" 
+          className="w-full py-3 text-base font-semibold"
+          isLoading={isLoading}
+          disabled={isLoading}
+        >
+          {isLoading ? "Creating Account..." : "Create Account"}
+        </Button>
+      </form>
     </div>
   );
 }

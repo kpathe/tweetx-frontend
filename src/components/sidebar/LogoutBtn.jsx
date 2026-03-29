@@ -2,7 +2,7 @@ import React from "react";
 import authService from "../../services/auth.service";
 import { logout } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
-import { LogOut } from "lucide-react"; // Matching the icon style
+import { LogOut } from "lucide-react";
 
 function LogoutBtn() {
   const dispatch = useDispatch();
@@ -16,10 +16,10 @@ function LogoutBtn() {
   return (
     <button
       onClick={logoutHandler}
-      className="flex items-center gap-4 px-4 py-3  text-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-all group"
+      className="flex items-center justify-center w-12 h-12 rounded-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+      title="Logout"
     >
-      {/* Icon */}
-      <LogOut className="w-7 h-7" />
+      <LogOut className="w-6 h-6" />
     </button>
   );
 }
