@@ -2,7 +2,7 @@ import Input from "./Input";
 import Button from "./Button";
 import Select from "./Select";
 import Container from "./container/Container";
-import LogoutBtn from "./Sidebar/LogoutBtn";
+import LogoutBtn from "./sidebar/LogoutBtn";
 import Sidebar from "./sidebar/Sidebar";
 import PostForm from "./PostForm";
 import TweetCard from "./TweetCard";
