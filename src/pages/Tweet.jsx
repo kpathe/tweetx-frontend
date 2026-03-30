@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateTweetCommentsCount, setTweetCommentsCount } from "../store/tweetSlice";
 import { ArrowLeft } from "lucide-react";
 import tweetService from "../services/tweet.service";
 import interactionService from "../services/interaction.service";
-import { CommentCard, Spinner } from "../components"; // Standard non-clickable card
+import { CommentCard, Spinner } from "../components";
 import TweetDetailCard from "../components/TweetDetailCard";
 import PostForm from "../components/PostForm";
 
 function TweetPage() {
   const { tweetId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [tweet, setTweet] = useState(null);
   const [comments, setComments] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -20,9 +24,17 @@ function TweetPage() {
         tweetService.getTweet(tweetId),
         interactionService.getTweetComments(tweetId),
       ]);
-      // Handle nested response structure
-      setTweet(tRes?.data || tRes);
-      setComments(cRes?.data || cRes);
+      const tweetData = tRes?.data || tRes;
+      const commentsData = cRes?.data || cRes;
+
+      setTweet(tweetData);
+      setComments(commentsData);
+      const exactCount = commentsData?.length ?? 0;
+      setCommentsCount(exactCount);
+      // Sync Redux store with the real count from the server so TweetCard
+      // in the feed shows the correct number, overwriting any stale backend value.
+      dispatch(setTweetCommentsCount({ tweetId, count: exactCount }));
+      console.log("dispatched setTweetCommentsCount", { tweetId, count: exactCount })
     } catch (error) {
       console.error("Error fetching detail view", error);
     } finally {
@@ -31,19 +43,20 @@ function TweetPage() {
   };
 
   const handleCommentDelete = (commentId) => {
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment._id !== commentId),
-    );
+    setComments((prev) => prev.filter((c) => c._id !== commentId));
+    setCommentsCount((prev) => Math.max(0, prev - 1));
+    dispatch(updateTweetCommentsCount({ tweetId, delta: -1 }));
   };
 
   const handleCommentSuccess = (newComment) => {
-    // Add the new comment to the list
     if (newComment?.data) {
-      setComments((prevComments) => [newComment.data, ...prevComments]);
+      setComments((prev) => [newComment.data, ...prev]);
     } else {
-      // Fallback: refetch all comments
       fetchData();
+      return;
     }
+    setCommentsCount((prev) => prev + 1);
+    dispatch(updateTweetCommentsCount({ tweetId, delta: +1 }));
   };
 
   useEffect(() => {
@@ -69,9 +82,13 @@ function TweetPage() {
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">Tweet</h1>
       </div>
 
-      <TweetDetailCard tweet={tweet} onCommentAdded={handleCommentSuccess} />
+      <TweetDetailCard
+        tweet={tweet}
+        commentsCount={commentsCount}
+        onCommentAdded={handleCommentSuccess}
+      />
 
-      <PostForm isComment parentId={tweetId} onSuccess={handleCommentSuccess} />
+
 
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {comments.length > 0 ? (

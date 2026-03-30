@@ -11,7 +11,6 @@ function TweetCard({ tweet }) {
   const currentUser = useSelector((state) => state.auth.userData.data);
 
   const author = tweet?.author;
-
   const isOwner = currentUser?.user?._id === author?._id;
 
   const deleteTweet = async (e) => {
@@ -30,12 +29,17 @@ function TweetCard({ tweet }) {
 
   const handleContentClick = () => {
     window.location.href = `/tweet/${tweet?._id}`;
+
+    console.log("TweetCard render", tweet._id, tweet.commentsCount);
   };
 
   return (
-    <div className="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+    <div className="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-70/50 dark:hover:bg-slate-900/40 transition-colors cursor-pointer group">
       <div className="flex gap-3">
-        <Link to={`/u/${author?.username}`} onClick={(e) => e.stopPropagation()}>
+        <Link
+          to={`/u/${author?.username}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <img
             src={author?.profileImage || "https://placehold.co/150"}
             className="h-12 w-12 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
@@ -46,12 +50,18 @@ function TweetCard({ tweet }) {
         <div className="flex-1">
           <div className="flex justify-between items-start gap-2">
             <div className="flex gap-2 items-center min-w-0">
-              <Link to={`/u/${author?.username}`} onClick={(e) => e.stopPropagation()}>
+              <Link
+                to={`/u/${author?.username}`}
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span className="font-bold dark:text-white hover:underline truncate">
                   {author?.fullName}
                 </span>
               </Link>
-              <Link to={`/u/${author?.username}`} onClick={(e) => e.stopPropagation()}>
+              <Link
+                to={`/u/${author?.username}`}
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span className="text-gray-500 dark:text-gray-400 hover:underline text-sm truncate">
                   @{author?.username || "username"}
                 </span>
@@ -61,30 +71,29 @@ function TweetCard({ tweet }) {
                 {formatRelativeTime(tweet.createdAt)}
               </span>
             </div>
-            
+
             {isOwner && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteTweet(e);
                 }}
-                className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100"
-                title="Delete tweet"
+                className="p-2 flex items-center justify-center rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/20 hover:cursor-pointer"
               >
                 <Trash2 size={16} />
               </button>
             )}
           </div>
-          
-          <p 
+
+          <p
             className="mt-2 text-base text-gray-900 dark:text-gray-100 leading-normal cursor-pointer hover:opacity-80 transition-opacity"
             onClick={handleContentClick}
           >
             {tweet.content}
           </p>
-          
+
           {tweet?.imageURL && (
-            <div 
+            <div
               className="mt-3 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
               onClick={handleContentClick}
             >
@@ -95,9 +104,14 @@ function TweetCard({ tweet }) {
               />
             </div>
           )}
-          
+
           <div className="mt-3">
-            <InteractionBar tweet={tweet} />
+            {/* Pass commentsCount directly so InteractionBar always reflects
+                the latest Redux value rather than its stale internal state */}
+            <InteractionBar
+              tweet={tweet}
+              commentsCount={tweet.commentsCount ?? 0}
+            />
           </div>
         </div>
       </div>

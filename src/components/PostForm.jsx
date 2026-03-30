@@ -82,7 +82,7 @@ function PostForm({
           reset();
           onSuccess({ data: formattedComment });
         } else {
-          // Standardize the object for instant UI updates (tweets)
+          
           const formattedItem = {
             ...resultData,
             author: {
@@ -96,10 +96,10 @@ function PostForm({
             isLiked: false,
           };
 
-          // Only update the main tweet feed if it's a top-level post
+          
           dispatch(addTweet(formattedItem));
           reset();
-          onSuccess(formattedItem); // Closes the modal or triggers parent update
+          onSuccess(formattedItem); 
         }
       }
     } catch (error) {
