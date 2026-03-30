@@ -19,15 +19,17 @@ export class AuthService {
       const response = await apiClient.post("/user/signup", data);
 
       if (response.data && response.status < 400) {
+        const email = data.get("email");
+        const password = data.get("password");
         return this.login({
-          email: data.get("email"),
-          password: data.get("password"),
+          email,
+          password,
         });
       } else {
         return response.data;
       }
     } catch (error) {
-      console.log(error);
+      console.log("This is an error : ", error.response?.data);
       throw error;
     }
   }

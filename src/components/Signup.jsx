@@ -11,10 +11,15 @@ function Signup() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [isLoading, setIsLoading] = useState(false);
 
   const signup = async (data) => {
+    console.log(data);
     setError("");
     setIsLoading(true);
     try {
@@ -28,6 +33,10 @@ function Signup() {
         formData.append("profileImage", data.profileImage[0]);
       }
 
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
       const session = await authService.signup(formData);
       if (session) {
         const userData = await userService.getCurrentUser();
@@ -37,7 +46,7 @@ function Signup() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.message || error.message);
     } finally {
       setIsLoading(false);
     }
@@ -50,8 +59,8 @@ function Signup() {
           label="Full Name"
           placeholder="Enter your full name"
           error={errors.fullName?.message}
-          {...register("fullName", { 
-            required: "Full name is required" 
+          {...register("fullName", {
+            required: "Full name is required",
           })}
         />
 
@@ -59,8 +68,8 @@ function Signup() {
           label="Username"
           placeholder="Enter a username"
           error={errors.username?.message}
-          {...register("username", { 
-            required: "Username is required" 
+          {...register("username", {
+            required: "Username is required",
           })}
         />
 
@@ -84,12 +93,12 @@ function Signup() {
           type="password"
           placeholder="Choose a strong password"
           error={errors.password?.message}
-          {...register("password", { 
+          {...register("password", {
             required: "Password is required",
             minLength: {
               value: 6,
-              message: "Password must be at least 6 characters"
-            }
+              message: "Password must be at least 6 characters",
+            },
           })}
         />
 
@@ -107,8 +116,8 @@ function Signup() {
           </div>
         )}
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full py-3 text-base font-semibold"
           isLoading={isLoading}
           disabled={isLoading}
