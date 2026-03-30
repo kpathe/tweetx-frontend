@@ -31,7 +31,7 @@ function MainLayout({ children }) {
       </main>
 
       {/* Right Sidebar - Widgets, hidden on tablets and below */}
-      <aside className="hidden xl:block xl:w-80 sticky top-0 h-screen p-4 overflow-y-auto bg-white dark:bg-slate-950">
+      <aside className="hidden lg:block lg:w-80 sticky top-0 h-screen p-4 overflow-y-auto bg-white dark:bg-slate-950">
         <div className="space-y-4">
           {/* Search Widget */}
           <div className="bg-gray-100 dark:bg-slate-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-none">
