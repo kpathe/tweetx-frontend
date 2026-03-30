@@ -1,15 +1,18 @@
-import React from "react";
+import React, { use } from "react";
 import authService from "../../services/auth.service";
 import { logout } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
 import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function LogoutBtn() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const logoutHandler = () => {
     authService.logout().then(() => {
       dispatch(logout());
+      navigate("/");
     });
   };
 
