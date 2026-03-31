@@ -11,7 +11,7 @@ function MainLayout({ children }) {
   return (
     <div className="flex min-h-screen bg-white dark:bg-slate-950">
       {/* Desktop Sidebar - Icon only, narrow */}
-      <div className="hidden lg:flex lg:w-64 sticky top-0 h-screen border-r border-gray-200 dark:border-gray-700 overflow-y-auto bg-white dark:bg-slate-950">
+      <div className="hidden lg:flex lg:w-45 sticky top-0 h-screen border-r border-gray-200 dark:border-gray-700 overflow-y-auto bg-white dark:bg-slate-950">
         <Sidebar />
       </div>
 
@@ -31,7 +31,7 @@ function MainLayout({ children }) {
       </main>
 
       {/* Right Sidebar - Widgets, hidden on tablets and below */}
-      <aside className="hidden lg:block lg:w-80 sticky top-0 h-screen p-4 overflow-y-auto bg-white dark:bg-slate-950">
+      <aside className="hidden lg:block lg:w-85 sticky top-0 h-screen p-4 overflow-y-auto bg-white dark:bg-slate-950">
         <div className="space-y-4">
           {/* Search Widget */}
           <div className="bg-gray-100 dark:bg-slate-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-none">
