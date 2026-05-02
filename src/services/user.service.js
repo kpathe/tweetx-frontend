@@ -109,6 +109,18 @@ class UserService {
       throw error;
     }
   }
+
+  async markNotificationAsRead(notificationId) {
+    try {
+      const response = await apiClient.patch(
+        `/notification/${notificationId}/read`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error("UserService :: markNotificationAsRead :: error", error);
+      throw error;
+    }
+  }
 }
 
 const userService = new UserService();

@@ -112,13 +112,13 @@ function PostForm({
   return (
     <form
       onSubmit={handleSubmit(submit)}
-      className={`p-4 ${!isComment ? "border-b border-gray-200 dark:border-gray-700" : ""} bg-white dark:bg-slate-950`}
+      className={`p-5 ${!isComment ? "border-b border-gray-100 dark:border-gray-800" : ""} bg-white dark:bg-slate-950 transition-all`}
     >
-      <div className="flex gap-3 sm:gap-4">
-        <div className="hidden sm:block flex-shrink-0">
+      <div className="flex gap-4">
+        <div className="flex-shrink-0">
           <img
-            src={currentUser?.profileImage || "https://placehold.co/100"}
-            className="w-10 h-10 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
+            src={currentUser?.profileImage || "https://via.placeholder.com/150"}
+            className="w-12 h-12 rounded-full object-cover ring-2 ring-violet-500/10 shadow-sm"
             alt="avatar"
           />
         </div>
@@ -126,18 +126,22 @@ function PostForm({
         <div className="flex-1 min-w-0">
           <textarea
             {...register("content")}
-            className="w-full bg-transparent text-lg outline-none resize-none dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="w-full bg-transparent text-xl outline-none resize-none dark:text-white placeholder-gray-500 dark:placeholder-gray-400 min-h-[50px] mt-2"
             placeholder={isComment ? "Post your reply..." : "What's happening?!"}
             rows={isComment ? "2" : "3"}
+            onInput={(e) => {
+              e.target.style.height = "auto";
+              e.target.style.height = e.target.scrollHeight + "px";
+            }}
           />
 
           {/* Image Preview */}
           {imagePreview && !isComment && (
-            <div className="relative mt-4 rounded-2xl overflow-hidden group">
+            <div className="relative mt-4 rounded-2xl overflow-hidden group border border-gray-100 dark:border-gray-800 shadow-sm">
               <img
                 src={imagePreview}
                 alt="preview"
-                className="max-w-full max-h-64 object-cover rounded-2xl"
+                className="max-w-full max-h-96 w-full object-cover"
               />
               <button
                 type="button"
@@ -145,27 +149,25 @@ function PostForm({
                   e.preventDefault();
                   e.stopPropagation();
                   setImagePreview(null);
-                  // Clear the file input
                   const fileInput = document.getElementById("tweet-image");
                   if (fileInput) fileInput.value = "";
                 }}
-                className="absolute top-2 right-2 p-1.5 bg-gray-900/70 hover:bg-gray-900 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                className="absolute top-3 right-3 p-2 bg-gray-900/80 hover:bg-black rounded-full transition-all text-white backdrop-blur-sm"
               >
-                <X size={18} className="text-white" />
+                <X size={20} />
               </button>
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50">
-            <div className="flex items-center gap-2">
-              {/* 🖼️ Hide Image Icon if it's a comment */}
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50 dark:border-gray-800/50">
+            <div className="flex items-center gap-1">
               {!isComment && (
                 <label
                   htmlFor="tweet-image"
-                  className="p-2 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-full cursor-pointer transition-all disabled:opacity-50"
-                  style={{ cursor: isSubmitting ? "not-allowed" : "pointer" }}
+                  className="p-2.5 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-full cursor-pointer transition-all"
+                  title="Add Image"
                 >
-                  <ImageIcon size={20} />
+                  <ImageIcon size={22} />
                   <input
                     id="tweet-image"
                     type="file"
@@ -176,21 +178,31 @@ function PostForm({
                   />
                 </label>
               )}
+              {/* Added some dummy icons for X-like feel */}
+              <button type="button" className="p-2.5 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-full opacity-60 cursor-default">
+                 <svg className="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </button>
             </div>
 
-            <div className="flex items-center gap-4 flex-shrink-0">
+            <div className="flex items-center gap-5">
               {charCount > 0 && (
-                <span className={`text-sm font-medium ${isOverLimit ? "text-red-500 dark:text-red-400" : "text-gray-400 dark:text-gray-500"}`}>
-                  {MAX_LIMIT - charCount}
-                </span>
+                <div className="flex items-center gap-2">
+                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${isOverLimit ? "border-red-500 text-red-500" : "border-violet-200 dark:border-violet-900 text-gray-400"}`}>
+                      {MAX_LIMIT - charCount}
+                   </div>
+                </div>
               )}
               <Button
                 disabled={isButtonDisabled}
                 type="submit"
                 isLoading={isSubmitting}
-                className="rounded-full px-6 py-2 bg-violet-600 dark:bg-violet-700 hover:bg-violet-700 dark:hover:bg-violet-600 text-white font-bold text-base min-w-fit"
+                className={`rounded-full px-8 py-2.5 font-extrabold text-base transition-all shadow-md active:scale-95 ${
+                  isButtonDisabled 
+                    ? "bg-violet-600/50 text-white/50" 
+                    : "bg-violet-600 hover:bg-violet-700 text-white shadow-violet-500/20"
+                }`}
               >
-                {isComment ? "Reply" : "Tweet"}
+                {isComment ? "Reply" : "Post"}
               </Button>
             </div>
           </div>

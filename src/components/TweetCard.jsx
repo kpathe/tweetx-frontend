@@ -34,40 +34,46 @@ function TweetCard({ tweet }) {
   };
 
   return (
-    <div className="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-70/50 dark:hover:bg-slate-900/40 transition-colors cursor-pointer group">
-      <div className="flex gap-3">
+    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50/50 dark:hover:bg-slate-900/30 transition-all cursor-pointer group relative">
+      <div className="flex gap-4">
         <Link
           to={`/u/${author?.username}`}
           onClick={(e) => e.stopPropagation()}
+          className="flex-shrink-0"
         >
           <img
-            src={author?.profileImage || "https://placehold.co/150"}
-            className="h-12 w-12 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
+            src={author?.profileImage || "https://via.placeholder.com/150"}
+            className="h-12 w-12 rounded-full object-cover border border-gray-100 dark:border-gray-800 hover:opacity-90 transition-opacity"
             alt="avatar"
           />
         </Link>
 
-        <div className="flex-1">
-          <div className="flex justify-between items-start gap-2">
-            <div className="flex gap-2 items-center min-w-0">
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-start">
+            <div className="flex flex-wrap items-center gap-x-1.5 min-w-0">
               <Link
                 to={`/u/${author?.username}`}
                 onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1 group/author"
               >
-                <span className="font-bold dark:text-white hover:underline truncate">
+                <span className="font-bold text-gray-900 dark:text-white group-hover/author:underline truncate">
                   {author?.fullName}
                 </span>
+                {author?.followers?.length > 10 && (
+                   <svg className="w-3.5 h-3.5 text-violet-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                     <path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812z" />
+                   </svg>
+                )}
               </Link>
               <Link
                 to={`/u/${author?.username}`}
                 onClick={(e) => e.stopPropagation()}
+                className="text-gray-500 dark:text-gray-400 truncate"
               >
-                <span className="text-gray-500 dark:text-gray-400 hover:underline text-sm truncate">
-                  @{author?.username || "username"}
-                </span>
+                @{author?.username || "username"}
               </Link>
               <span className="text-gray-400 dark:text-gray-600">·</span>
-              <span className="text-gray-500 dark:text-gray-400 hover:underline text-sm whitespace-nowrap">
+              <span className="text-gray-500 dark:text-gray-400 text-sm whitespace-nowrap hover:underline">
                 {formatRelativeTime(tweet.createdAt)}
               </span>
             </div>
@@ -78,7 +84,7 @@ function TweetCard({ tweet }) {
                   e.stopPropagation();
                   deleteTweet(e);
                 }}
-                className="p-2 flex items-center justify-center rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/20 hover:cursor-pointer"
+                className="p-2 -mr-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all opacity-0 group-hover:opacity-100"
               >
                 <Trash2 size={16} />
               </button>
@@ -86,7 +92,7 @@ function TweetCard({ tweet }) {
           </div>
 
           <p
-            className="mt-2 text-base text-gray-900 dark:text-gray-100 leading-normal cursor-pointer hover:opacity-80 transition-opacity"
+            className="mt-1 text-[15px] text-gray-800 dark:text-gray-200 leading-normal whitespace-pre-wrap break-words cursor-pointer"
             onClick={handleContentClick}
           >
             {tweet.content}
@@ -94,20 +100,18 @@ function TweetCard({ tweet }) {
 
           {tweet?.imageURL && (
             <div
-              className="mt-3 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+              className="mt-3 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden cursor-pointer hover:opacity-95 transition-opacity shadow-sm"
               onClick={handleContentClick}
             >
               <img
                 src={tweet.imageURL}
                 alt="tweet"
-                className="w-full h-auto object-cover max-h-96"
+                className="w-full h-auto object-cover max-h-[512px]"
               />
             </div>
           )}
 
-          <div className="mt-3">
-            {/* Pass commentsCount directly so InteractionBar always reflects
-                the latest Redux value rather than its stale internal state */}
+          <div className="mt-4">
             <InteractionBar
               tweet={tweet}
               commentsCount={tweet.commentsCount ?? 0}
