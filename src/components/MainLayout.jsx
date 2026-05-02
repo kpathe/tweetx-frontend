@@ -9,26 +9,27 @@ function MainLayout({ children }) {
 
   return (
     <div
-      className="flex min-h-screen mx-auto"
+      className="flex min-h-screen mx-auto w-full"
       style={{
-        maxWidth: "1300px",
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
       }}
     >
       {/* Desktop Sidebar */}
       <div
-        className="hidden sm:flex flex-col sm:w-[72px] xl:w-[275px] sticky top-0 h-screen overflow-y-auto px-2"
+        className="hidden sm:flex sm:w-[88px] xl:w-[275px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto"
         style={{ borderRight: "1px solid var(--border-color)" }}
       >
-        <Sidebar />
+        {/* Push sidebar content to the right side of the column */}
+        <div className="ml-auto px-3 w-full xl:w-auto xl:min-w-[250px]">
+          <Sidebar />
+        </div>
       </div>
 
       {/* Main Content Area */}
       <main
-        className="flex-1 min-h-screen pb-16 sm:pb-0 relative"
+        className="flex-1 min-h-screen pb-16 sm:pb-0 relative sm:max-w-[600px]"
         style={{
-          maxWidth: "600px",
           borderRight: "1px solid var(--border-color)",
         }}
       >
@@ -63,7 +64,7 @@ function MainLayout({ children }) {
       </main>
 
       {/* Right Sidebar */}
-      <aside className="hidden lg:block lg:w-[350px] xl:w-[400px] sticky top-0 h-screen overflow-y-auto pl-6 pr-4 pt-2">
+      <aside className="hidden lg:flex lg:w-[350px] xl:w-[400px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto pl-6 pr-8 pt-2">
         <div className="space-y-4">
           {/* Search Bar */}
           <div className="sticky top-0 pb-3 pt-1 z-10" style={{ backgroundColor: "var(--bg-primary)" }}>
