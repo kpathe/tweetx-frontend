@@ -36,7 +36,9 @@ const router = createBrowserRouter([
         path: "/search",
         element: (
           <Protected authentication={true}>
-            <Search />
+            <MainLayout>
+              <Search />
+            </MainLayout>
           </Protected>
         ),
       },

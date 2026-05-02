@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import userService from "../services/user.service";
-import { SearchInput, MainLayout } from "../components";
+import { SearchInput } from "../components";
 import { Link } from "react-router-dom";
 
 function Search() {
@@ -32,8 +32,7 @@ function Search() {
   }, [query]);
 
   return (
-    <MainLayout>
-      <div className="py-4 px-4 min-h-screen">
+    <div className="py-4 px-4 min-h-screen">
         <div className="p-3 sticky top-0 bg-white dark:bg-slate-950 backdrop-blur-md z-10">
           <SearchInput
             value={query}
@@ -80,7 +79,7 @@ function Search() {
           )}
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }
 

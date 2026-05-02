@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Heart, User, MessageCircle } from "lucide-react";
-import { MainLayout } from "../components";
 import userService from "../services/user.service";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
@@ -52,8 +51,7 @@ function Notifications() {
   };
 
   return (
-    <MainLayout>
-      <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md z-10">
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">
             Notifications
@@ -117,7 +115,7 @@ function Notifications() {
           )}
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }
 

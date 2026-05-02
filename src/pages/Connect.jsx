@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import userService from "../services/user.service";
 import { UserPlus, UserCheck } from "lucide-react";
-import { MainLayout } from "../components";
 import { Link } from "react-router-dom";
 
 function Connect() {
@@ -49,8 +48,7 @@ function Connect() {
   };
 
   return (
-    <MainLayout>
-      <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md z-10">
           <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <UserPlus className="text-violet-600" size={24} />
@@ -126,7 +124,7 @@ function Connect() {
           )}
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }
 
