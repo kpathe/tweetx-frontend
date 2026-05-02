@@ -16,9 +16,9 @@ function SearchInput({ value, onChange, onClear }) {
       {value && (
         <button
           onClick={onClear}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+          className="absolute inset-y-0 right-0 pr-4 flex items-center group/clear"
         >
-          <XCircle className="h-5 w-5 text-[#1d9bf0]" />
+          <XCircle className="h-5 w-5 text-gray-400 group-hover/clear:text-violet-500 transition-colors fill-gray-100 dark:fill-slate-800" />
         </button>
       )}
     </div>
