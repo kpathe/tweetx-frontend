@@ -101,16 +101,16 @@ function Sidebar() {
         {/* User Info / Logout */}
         {authStatus && (
           <div className="flex items-center gap-3 p-3 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors group cursor-pointer">
-            {userData?.data?.user?.avatar ? (
-               <img src={userData.data.user.avatar} className="w-10 h-10 rounded-full object-cover" />
+            {userData?.data?.user?.profileImage ? (
+               <img src={userData.data.user.profileImage} className="w-10 h-10 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700" alt="profile" />
             ) : (
-               <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 font-bold">
-                 {username[0]?.toUpperCase()}
+               <div className="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-violet-600 dark:text-violet-400 font-bold">
+                 {username?.[0]?.toUpperCase() || "U"}
                </div>
             )}
             <div className="hidden xl:block flex-1 min-w-0">
                <p className="font-bold truncate text-gray-900 dark:text-white">{userData?.data?.user?.fullName || "User"}</p>
-               <p className="text-sm text-gray-500 truncate">@{username}</p>
+               <p className="text-sm text-gray-500 truncate">@{username || "username"}</p>
             </div>
             <div className="hidden xl:block">
               <LogoutBtn />

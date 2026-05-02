@@ -50,7 +50,6 @@ function Notifications() {
     }
   };
 
-  return (
   const handleNotificationClick = async (notifId, isRead) => {
     if (!isRead) {
       try {
