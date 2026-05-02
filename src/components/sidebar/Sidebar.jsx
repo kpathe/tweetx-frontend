@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LogoutBtn } from "../index";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { Home, Search, Bell, UserPlus, User, Moon, Sun, Feather } from "lucide-react";
+import { Home, Search, Bell, UserPlus, User, Moon, Sun } from "lucide-react";
 import { light, dark } from "../../store/themeSlice";
+import userService from "../../services/user.service";
+import Avatar from "../Avatar";
 
 function Sidebar() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -14,6 +16,23 @@ function Sidebar() {
   const username = userData?.data?.user?.username || "me";
   const dispatch = useDispatch();
   const isDark = themeMode === "dark";
+
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await userService.getNotifications();
+        if (response.success && response.data) {
+          const unread = response.data.filter((n) => !n.isRead).length;
+          setUnreadCount(unread);
+        }
+      } catch (err) {
+        // silently fail
+      }
+    };
+    if (authStatus) fetchNotifications();
+  }, [authStatus, location.pathname]);
 
   const navItems = [
     { label: "Home", path: "/", icon: Home },
@@ -61,12 +80,12 @@ function Sidebar() {
                 >
                   <div className="relative">
                     <Icon size={26} strokeWidth={isActive ? 2.8 : 2} />
-                    {item.label === "Notifications" && (
+                    {item.label === "Notifications" && unreadCount > 0 && (
                       <div
-                        className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center text-[10px] font-bold text-white"
+                        className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
                         style={{ backgroundColor: "var(--accent-color)", border: "2px solid var(--bg-primary)" }}
                       >
-                        3
+                        {unreadCount > 99 ? "99+" : unreadCount}
                       </div>
                     )}
                   </div>
@@ -92,17 +111,6 @@ function Sidebar() {
             </button>
           </div>
         </nav>
-
-        {/* Post Button */}
-        <div className="mt-4 flex xl:justify-start justify-center xl:pr-4">
-          <button
-            className="xl:w-full py-3 px-4 rounded-full font-bold text-[17px] flex items-center justify-center text-white transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "var(--accent-color)" }}
-          >
-            <span className="hidden xl:block">Post</span>
-            <Feather size={22} className="xl:hidden" />
-          </button>
-        </div>
       </div>
 
       {/* User Profile at Bottom */}
@@ -115,20 +123,12 @@ function Sidebar() {
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
           >
             <div className="flex-shrink-0">
-              {userData?.data?.user?.profileImage ? (
-                <img
-                  src={userData.data.user.profileImage}
-                  className="w-10 h-10 rounded-full object-cover"
-                  alt="profile"
-                />
-              ) : (
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold"
-                  style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
-                >
-                  {username?.[0]?.toUpperCase() || "U"}
-                </div>
-              )}
+              <Avatar
+                src={userData?.data?.user?.profileImage}
+                name={userData?.data?.user?.fullName}
+                username={username}
+                size={40}
+              />
             </div>
             <div className="hidden xl:flex flex-1 items-center justify-between min-w-0">
               <div className="min-w-0">

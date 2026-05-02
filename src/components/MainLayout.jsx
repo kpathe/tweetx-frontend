@@ -3,32 +3,32 @@ import { Outlet, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "../components/sidebar/Sidebar";
 import MobileBottomNav from "./MobileBottomNav";
+import Avatar from "../components/Avatar";
 
 function MainLayout({ children }) {
   const userData = useSelector((state) => state.auth.userData);
 
   return (
     <div
-      className="flex min-h-screen mx-auto w-full"
+      className="flex min-h-screen w-full"
       style={{
         backgroundColor: "var(--bg-primary)",
         color: "var(--text-primary)",
       }}
     >
-      {/* Desktop Sidebar */}
+      {/* Left spacer + Sidebar */}
       <div
-        className="hidden sm:flex sm:w-[88px] xl:w-[275px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto"
+        className="hidden sm:flex flex-1 sticky top-0 h-screen overflow-y-auto justify-end"
         style={{ borderRight: "1px solid var(--border-color)" }}
       >
-        {/* Push sidebar content to the right side of the column */}
-        <div className="ml-auto px-3 w-full xl:w-auto xl:min-w-[250px]">
+        <div className="w-[68px] xl:w-[250px] px-2">
           <Sidebar />
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content Area — fixed width, no flex-1 */}
       <main
-        className="flex-1 min-h-screen pb-16 sm:pb-0 relative sm:max-w-[600px]"
+        className="min-h-screen pb-16 sm:pb-0 relative w-full sm:w-[600px] sm:min-w-[600px]"
         style={{
           borderRight: "1px solid var(--border-color)",
         }}
@@ -45,26 +45,19 @@ function MainLayout({ children }) {
             <span className="text-2xl font-black">𝕏</span>
           </Link>
           <div className="flex items-center gap-2">
-            {userData?.data?.user?.profileImage ? (
-              <img
-                src={userData.data.user.profileImage}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
-              >
-                U
-              </div>
-            )}
+            <Avatar
+              src={userData?.data?.user?.profileImage}
+              name={userData?.data?.user?.fullName}
+              username={userData?.data?.user?.username}
+              size={32}
+            />
           </div>
         </div>
         {children || <Outlet />}
       </main>
 
       {/* Right Sidebar */}
-      <aside className="hidden lg:flex lg:w-[350px] xl:w-[400px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto pl-6 pr-8 pt-2">
+      <aside className="hidden lg:block lg:w-[350px] xl:w-[400px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto pl-6 pr-4 pt-2">
         <div className="space-y-4">
           {/* Search Bar */}
           <div className="sticky top-0 pb-3 pt-1 z-10" style={{ backgroundColor: "var(--bg-primary)" }}>
@@ -193,6 +186,9 @@ function MainLayout({ children }) {
           </div>
         </div>
       </aside>
+
+      {/* Right spacer — mirrors the left sidebar's flex-1 for symmetry */}
+      <div className="hidden lg:block flex-1" />
 
       {/* Mobile Bottom Navigation */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40">

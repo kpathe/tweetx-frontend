@@ -36,6 +36,7 @@ function EditProfile() {
       return () => URL.revokeObjectURL(url);
     }
   }, [imageFile]);
+
   const onUpdate = async (data) => {
     setError("");
     try {
@@ -48,7 +49,6 @@ function EditProfile() {
 
       await userService.editProfile(updatePayload);
 
-      // Fetch updated user data and dispatch
       const updatedUserData = await userService.getCurrentUser();
       if (updatedUserData) {
         dispatch(login(updatedUserData));
@@ -66,7 +66,6 @@ function EditProfile() {
     if (confirmDelete) {
       try {
         await userService.deleteAccount();
-        // Clear local storage/Redux if your service doesn't do it automatically
         navigate("/signup");
       } catch (err) {
         setError("Could not delete account. Try again later.");
@@ -75,16 +74,22 @@ function EditProfile() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-4 md:p-8 bg-white dark:bg-slate-900 min-h-screen">
+    <div
+      className="w-full max-w-2xl mx-auto p-4 md:p-8 min-h-screen"
+      style={{ backgroundColor: "var(--bg-primary)" }}
+    >
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-extrabold dark:text-white">
+        <h1 className="text-2xl font-extrabold" style={{ color: "var(--text-primary)" }}>
           Edit Profile
         </h1>
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full"
+          className="p-2 rounded-full transition-colors"
+          style={{ color: "var(--text-primary)" }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
         >
-          <X className="dark:text-white" />
+          <X />
         </button>
       </div>
 
@@ -92,11 +97,21 @@ function EditProfile() {
         {/* Profile Image Upload */}
         <div className="flex flex-col items-center gap-4">
           <div className="relative group">
-            <img
-              src={preview}
-              className="w-32 h-32 rounded-full object-cover border-4 border-[#1d9bf0] brightness-90 group-hover:brightness-75 transition-all"
-              alt=""
-            />
+            {preview ? (
+              <img
+                src={preview}
+                className="w-32 h-32 rounded-full object-cover brightness-90 group-hover:brightness-75 transition-all"
+                style={{ border: "4px solid var(--accent-color)" }}
+                alt=""
+              />
+            ) : (
+              <div
+                className="w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold"
+                style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
+              >
+                U
+              </div>
+            )}
             <label
               htmlFor="image-upload"
               className="absolute inset-0 flex items-center justify-center cursor-pointer"
@@ -114,7 +129,9 @@ function EditProfile() {
               />
             </label>
           </div>
-          <p className="text-sm text-gray-500">Click photo to change</p>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            Click photo to change
+          </p>
         </div>
 
         <div className="space-y-4">
@@ -125,10 +142,18 @@ function EditProfile() {
           />
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-bold dark:text-gray-300">Bio</label>
+            <label className="text-sm font-bold" style={{ color: "var(--text-secondary)" }}>
+              Bio
+            </label>
             <textarea
               placeholder="What's on your mind?"
-              className="w-full p-4 rounded-2xl border border-gray-200 dark:border-gray-800 bg-transparent dark:text-white focus:border-[#1d9bf0] outline-none min-h-[120px] transition-all"
+              className="w-full p-4 rounded-2xl bg-transparent outline-none min-h-[120px] transition-colors"
+              style={{
+                border: "1px solid var(--border-color)",
+                color: "var(--text-primary)",
+              }}
+              onFocus={(e) => e.target.style.borderColor = "var(--accent-color)"}
+              onBlur={(e) => e.target.style.borderColor = "var(--border-color)"}
               {...register("bio")}
             />
           </div>
@@ -142,22 +167,29 @@ function EditProfile() {
 
         <Button
           type="submit"
-          className="w-full py-4 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold text-lg"
+          className="w-full py-4 rounded-full font-bold text-lg"
+          style={{
+            backgroundColor: "var(--text-primary)",
+            color: "var(--bg-primary)",
+          }}
         >
           {isSubmitting ? "Saving Changes..." : "Save Profile"}
         </Button>
       </form>
 
       {/* Danger Zone */}
-      <div className="mt-20 pt-10 border-t border-red-100 dark:border-red-900/30">
-        <h3 className="text-red-600 font-bold mb-2">Danger Zone</h3>
-        <p className="text-gray-500 text-sm mb-6">
+      <div className="mt-20 pt-10" style={{ borderTop: "1px solid rgba(244,33,46,0.2)" }}>
+        <h3 className="text-red-500 font-bold mb-2">Danger Zone</h3>
+        <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
           Deleting your account will remove all your tweets and media. This
           cannot be undone.
         </p>
         <button
           onClick={onDelete}
-          className="w-full py-3 rounded-full border border-red-500 text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-950/20 transition-all"
+          className="w-full py-3 rounded-full font-bold transition-colors"
+          style={{ border: "1px solid #f4212e", color: "#f4212e" }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "rgba(244,33,46,0.1)"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
         >
           Delete Account
         </button>

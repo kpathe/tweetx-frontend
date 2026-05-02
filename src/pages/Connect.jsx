@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import userService from "../services/user.service";
 import { UserPlus } from "lucide-react";
+import Avatar from "../components/Avatar";
 import { Link } from "react-router-dom";
 
 function Connect() {
@@ -89,20 +90,12 @@ function Connect() {
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
             >
               <Link to={`/u/${user.username}`} className="flex gap-3 items-center flex-1 min-w-0">
-                {user.profileImage ? (
-                  <img
+                  <Avatar
                     src={user.profileImage}
-                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                    alt={user.username}
+                    name={user.fullName}
+                    username={user.username}
+                    size={40}
                   />
-                ) : (
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0"
-                    style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
-                  >
-                    {user.username?.[0]?.toUpperCase()}
-                  </div>
-                )}
                 <div className="min-w-0">
                   <p className="font-bold text-[15px] truncate" style={{ color: "var(--text-primary)" }}>
                     {user.fullName}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import userService from "../services/user.service";
 import { SearchInput } from "../components";
+import Avatar from "../components/Avatar";
 import { Link } from "react-router-dom";
 
 function Search() {
@@ -70,20 +71,12 @@ function Search() {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-secondary)"}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
             >
-              {user.profileImage ? (
-                <img
-                  src={user.profileImage}
-                  className="h-10 w-10 rounded-full object-cover"
-                  alt={user.username}
-                />
-              ) : (
-                <div
-                  className="h-10 w-10 rounded-full flex items-center justify-center font-bold"
-                  style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
-                >
-                  {user.username?.[0]?.toUpperCase()}
-                </div>
-              )}
+              <Avatar
+                src={user.profileImage}
+                name={user.fullName}
+                username={user.username}
+                size={40}
+              />
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-[15px] truncate" style={{ color: "var(--text-primary)" }}>
                   {user.fullName}

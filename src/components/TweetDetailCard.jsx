@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react";
 import InteractionBar from "./InteractionBar";
 import tweetService from "../services/tweet.service";
 import { removeTweet } from "../store/tweetSlice";
+import Avatar from "./Avatar";
 
 function TweetDetailCard({ tweet, commentsCount, onCommentAdded }) {
   const dispatch = useDispatch();
@@ -35,45 +36,56 @@ function TweetDetailCard({ tweet, commentsCount, onCommentAdded }) {
   };
 
   return (
-    <div className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-slate-950">
+    <div style={{ borderBottom: "1px solid var(--border-color)" }}>
       <div className="p-4 flex justify-between items-start">
-        <div className="flex gap-4 items-start">
+        <div className="flex gap-3 items-start">
           <Link to={`/u/${author?.username}`}>
-            <img
-              src={author?.profileImage || "https://placehold.co/150"}
-              className="w-14 h-14 rounded-full object-cover hover:opacity-80 transition-opacity ring-1 ring-gray-100 dark:ring-gray-800"
-              alt="avatar"
+            <Avatar
+              src={author?.profileImage}
+              name={author?.fullName}
+              username={author?.username}
+              size={48}
             />
           </Link>
-          <div className="flex-1">
+          <div>
             <Link to={`/u/${author?.username}`}>
-              <h2 className="font-bold text-2xl dark:text-white leading-tight hover:underline">
+              <h2
+                className="font-bold text-lg leading-tight hover:underline"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {author?.fullName}
               </h2>
             </Link>
-            <p className="text-gray-500 text-lg">@{author?.username}</p>
+            <p style={{ color: "var(--text-secondary)" }}>@{author?.username}</p>
           </div>
         </div>
 
         {isOwner && (
           <button
             onClick={handleDeleteTweet}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/20 transition-all duration-200"
+            className="w-9 h-9 flex items-center justify-center rounded-full transition-colors"
+            style={{ color: "var(--text-secondary)" }}
           >
-            <Trash2 size={22} />
+            <Trash2 size={20} />
           </button>
         )}
       </div>
 
       <div className="px-4 pb-4">
-        <p className="text-2xl dark:text-gray-100 leading-relaxed whitespace-pre-wrap font-normal">
+        <p
+          className="text-xl leading-relaxed whitespace-pre-wrap"
+          style={{ color: "var(--text-primary)" }}
+        >
           {tweet.content}
         </p>
       </div>
 
       {tweet.imageURL && (
         <div className="px-4 pb-4">
-          <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{ border: "1px solid var(--border-color)" }}
+          >
             <img
               src={tweet.imageURL}
               className="w-full h-auto max-h-[500px] object-cover"
@@ -83,7 +95,10 @@ function TweetDetailCard({ tweet, commentsCount, onCommentAdded }) {
         </div>
       )}
 
-      <div className="px-4 py-4 border-b border-gray-100 dark:border-gray-800 text-gray-500 text-base">
+      <div
+        className="px-4 py-4 text-[15px]"
+        style={{ color: "var(--text-secondary)", borderBottom: "1px solid var(--border-color)" }}
+      >
         {format(new Date(tweet.createdAt), "h:mm a · MMM d, yyyy")}
       </div>
 

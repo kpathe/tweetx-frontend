@@ -17,6 +17,7 @@ import FeedTabs from "./FeedTabs";
 import CommentCard from "./CommentCard";
 import Spinner from "./Spinner";
 import MobileBottomNav from "./MobileBottomNav";
+import Avatar from "./Avatar";
 
 export {
   Input,
@@ -38,4 +39,5 @@ export {
   CommentCard,
   Spinner,
   MobileBottomNav,
+  Avatar,
 };

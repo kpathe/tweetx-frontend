@@ -31,10 +31,7 @@ function TweetPage() {
       setComments(commentsData);
       const exactCount = commentsData?.length ?? 0;
       setCommentsCount(exactCount);
-      // Sync Redux store with the real count from the server so TweetCard
-      // in the feed shows the correct number, overwriting any stale backend value.
       dispatch(setTweetCommentsCount({ tweetId, count: exactCount }));
-      console.log("dispatched setTweetCommentsCount", { tweetId, count: exactCount })
     } catch (error) {
       console.error("Error fetching detail view", error);
     } finally {
@@ -65,21 +62,35 @@ function TweetPage() {
 
   if (loading)
     return (
-      <div className="h-screen flex items-center justify-center bg-white dark:bg-slate-950">
-        <Spinner size="lg" className="text-violet-600 dark:text-violet-400" />
+      <div
+        className="h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--bg-primary)" }}
+      >
+        <Spinner size="lg" />
       </div>
     );
 
   return (
-    <div className="w-full min-h-screen bg-white dark:bg-slate-950 border-x border-gray-200 dark:border-gray-700">
-      <div className="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 flex items-center gap-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="w-full min-h-screen" style={{ backgroundColor: "var(--bg-primary)" }}>
+      <div
+        className="sticky top-0 z-10 p-4 flex items-center gap-4"
+        style={{
+          backgroundColor: "var(--bg-primary)",
+          borderBottom: "1px solid var(--border-color)",
+        }}
+      >
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors text-gray-900 dark:text-white"
+          className="p-2 rounded-full transition-colors"
+          style={{ color: "var(--text-primary)" }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
         >
           <ArrowLeft size={20} />
         </button>
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Tweet</h1>
+        <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+          Post
+        </h1>
       </div>
 
       <TweetDetailCard
@@ -88,9 +99,7 @@ function TweetPage() {
         onCommentAdded={handleCommentSuccess}
       />
 
-
-
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div>
         {comments.length > 0 ? (
           comments.map((comment) => (
             <CommentCard
@@ -100,9 +109,11 @@ function TweetPage() {
             />
           ))
         ) : (
-          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-            <p className="text-lg">No comments yet</p>
-            <p className="text-sm mt-1">Be the first to share your thoughts</p>
+          <div className="p-8 text-center">
+            <p className="text-lg" style={{ color: "var(--text-secondary)" }}>No comments yet</p>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+              Be the first to share your thoughts
+            </p>
           </div>
         )}
       </div>

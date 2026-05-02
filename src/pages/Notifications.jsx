@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Heart, User, MessageCircle } from "lucide-react";
 import userService from "../services/user.service";
 import { formatDistanceToNow } from "date-fns";
+import Avatar from "../components/Avatar";
 import { Link } from "react-router-dom";
 
 function Notifications() {
@@ -123,20 +124,12 @@ function Notifications() {
                     className="flex-shrink-0"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {notif.sender?.profileImage ? (
-                      <img
-                        src={notif.sender.profileImage}
-                        className="w-8 h-8 rounded-full object-cover"
-                        alt={notif.sender?.username}
-                      />
-                    ) : (
-                      <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
-                        style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
-                      >
-                        {notif.sender?.username?.[0]?.toUpperCase()}
-                      </div>
-                    )}
+                    <Avatar
+                      src={notif.sender?.profileImage}
+                      name={notif.sender?.fullName}
+                      username={notif.sender?.username}
+                      size={32}
+                    />
                   </Link>
                   <div className="min-w-0">
                     <Link

@@ -16,13 +16,13 @@ function Home() {
       try {
         let response;
         if (activeTab === "For you") {
-          response = await feedService.getHomeFeed(); // Your random/algo feed
+          response = await feedService.getHomeFeed();
         } else {
-          response = await feedService.getFeed(); // Feed from followed users
+          response = await feedService.getFeed();
         }
 
         if (response) {
-          dispatch(setTweets(response)); // This fills your 'allTweets' array
+          dispatch(setTweets(response));
         }
       } catch (error) {
         console.error("Error fetching feed:", error);
@@ -38,14 +38,17 @@ function Home() {
     return (
       <Container>
         <div className="flex justify-center items-center py-12">
-          <Spinner size="lg" className="text-violet-600 dark:text-violet-400" />
+          <Spinner size="lg" />
         </div>
       </Container>
     );
 
   return (
     <div className="w-full">
-      <div className="px-0 py-0 sticky top-0 bg-white dark:bg-slate-950 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 z-10">
+      <div
+        className="sticky top-0 z-10"
+        style={{ backgroundColor: "var(--bg-primary)" }}
+      >
         <FeedTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
@@ -55,9 +58,11 @@ function Home() {
         {tweets?.length > 0 ? (
           tweets.map((tweet) => <TweetCard key={tweet._id} tweet={tweet} />)
         ) : (
-          <div className="p-10 text-center text-gray-500 dark:text-gray-400">
-            <p className="text-lg">No tweets yet</p>
-            <p className="text-sm mt-1">Be the first to share something</p>
+          <div className="p-10 text-center">
+            <p className="text-lg" style={{ color: "var(--text-secondary)" }}>No tweets yet</p>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+              Be the first to share something
+            </p>
           </div>
         )}
       </div>

@@ -6,6 +6,7 @@ import tweetService from "../services/tweet.service";
 import interactionService from "../services/interaction.service";
 import { Button } from "./index";
 import { ImageIcon, X } from "lucide-react";
+import Avatar from "./Avatar";
 
 function PostForm({
   isComment = false,
@@ -117,20 +118,12 @@ function PostForm({
     >
       <div className="flex gap-3">
         <div className="flex-shrink-0 pt-1">
-          {currentUser?.profileImage ? (
-            <img
-              src={currentUser.profileImage}
-              className="w-10 h-10 rounded-full object-cover"
-              alt="avatar"
-            />
-          ) : (
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center font-bold"
-              style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
-            >
-              U
-            </div>
-          )}
+          <Avatar
+            src={currentUser?.profileImage}
+            name={currentUser?.fullName}
+            username={currentUser?.username}
+            size={40}
+          />
         </div>
 
         <div className="flex-1 min-w-0">
