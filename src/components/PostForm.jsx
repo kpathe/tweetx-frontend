@@ -112,23 +112,29 @@ function PostForm({
   return (
     <form
       onSubmit={handleSubmit(submit)}
-      className={`p-5 ${!isComment ? "border-b border-gray-100 dark:border-gray-800" : ""} bg-white dark:bg-slate-950 transition-all`}
+      className={`px-4 py-3 border-b border-[var(--border-color)] bg-[var(--bg-primary)]`}
     >
-      <div className="flex gap-4">
-        <div className="flex-shrink-0">
-          <img
-            src={currentUser?.profileImage || "https://via.placeholder.com/150"}
-            className="w-12 h-12 rounded-full object-cover ring-2 ring-violet-500/10 shadow-sm"
-            alt="avatar"
-          />
+      <div className="flex gap-3">
+        <div className="flex-shrink-0 pt-1">
+          {currentUser?.profileImage ? (
+            <img
+              src={currentUser.profileImage}
+              className="w-10 h-10 rounded-full object-cover"
+              alt="avatar"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--accent-color)] font-bold">
+              U
+            </div>
+          )}
         </div>
 
         <div className="flex-1 min-w-0">
           <textarea
             {...register("content")}
-            className="w-full bg-transparent text-xl outline-none resize-none dark:text-white placeholder-gray-500 dark:placeholder-gray-400 min-h-[50px] mt-2"
-            placeholder={isComment ? "Post your reply..." : "What's happening?!"}
-            rows={isComment ? "2" : "3"}
+            className="w-full bg-transparent text-xl outline-none resize-none text-[var(--text-primary)] placeholder-[var(--text-secondary)] min-h-[50px] mt-2"
+            placeholder={isComment ? "Post your reply" : "What is happening?!"}
+            rows={isComment ? "1" : "2"}
             onInput={(e) => {
               e.target.style.height = "auto";
               e.target.style.height = e.target.scrollHeight + "px";
@@ -137,11 +143,11 @@ function PostForm({
 
           {/* Image Preview */}
           {imagePreview && !isComment && (
-            <div className="relative mt-4 rounded-2xl overflow-hidden group border border-gray-100 dark:border-gray-800 shadow-sm">
+            <div className="relative mt-3 rounded-2xl overflow-hidden border border-[var(--border-color)]">
               <img
                 src={imagePreview}
                 alt="preview"
-                className="max-w-full max-h-96 w-full object-cover"
+                className="max-w-full max-h-[500px] w-full object-cover"
               />
               <button
                 type="button"
@@ -152,54 +158,59 @@ function PostForm({
                   const fileInput = document.getElementById("tweet-image");
                   if (fileInput) fileInput.value = "";
                 }}
-                className="absolute top-3 right-3 p-2 bg-gray-900/80 hover:bg-black rounded-full transition-all text-white backdrop-blur-sm"
+                className="absolute top-2 right-2 p-1.5 bg-[rgba(15,20,25,0.75)] hover:bg-[rgba(39,44,48,0.75)] rounded-full transition-all text-white backdrop-blur-sm"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50 dark:border-gray-800/50">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center justify-between mt-2 pt-2">
+            <div className="flex items-center -ml-2">
               {!isComment && (
-                <label
-                  htmlFor="tweet-image"
-                  className="p-2.5 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-full cursor-pointer transition-all"
-                  title="Add Image"
-                >
-                  <ImageIcon size={22} />
-                  <input
-                    id="tweet-image"
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    disabled={isSubmitting}
-                    {...register("image")}
-                  />
-                </label>
+                <>
+                  <label
+                    htmlFor="tweet-image"
+                    className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full cursor-pointer transition-all"
+                    title="Media"
+                  >
+                    <ImageIcon size={20} />
+                    <input
+                      id="tweet-image"
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      disabled={isSubmitting}
+                      {...register("image")}
+                    />
+                  </label>
+                  <button type="button" className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full transition-all" title="GIF">
+                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4H5a3 3 0 00-3 3v10a3 3 0 003 3h14a3 3 0 003-3V7a3 3 0 00-3-3zM5 18a1 1 0 01-1-1V7a1 1 0 011-1h14a1 1 0 011 1v10a1 1 0 01-1 1H5z"/><path d="M11 10h1v4h-1zM10 14h-1v-4h3v1h-2v1h1v1h-1v1zM15 10h3v1h-2v1h1v1h-1v1h-1v-4z"/></svg>
+                  </button>
+                  <button type="button" className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full transition-all" title="Poll">
+                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5v14h12V5H6zm2 2h8v2H8V7zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/></svg>
+                  </button>
+                  <button type="button" className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full transition-all" title="Emoji">
+                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 2a8 8 0 100 16 8 8 0 000-16zm-3.5 6a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm7 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm-3.5 4c2.5 0 4.5 1.5 4.5 3.5h-9c0-2 2-3.5 4.5-3.5z"/></svg>
+                  </button>
+                </>
               )}
-              {/* Added some dummy icons for X-like feel */}
-              <button type="button" className="p-2.5 text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-full opacity-60 cursor-default">
-                 <svg className="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              </button>
             </div>
 
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3">
               {charCount > 0 && (
-                <div className="flex items-center gap-2">
-                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${isOverLimit ? "border-red-500 text-red-500" : "border-violet-200 dark:border-violet-900 text-gray-400"}`}>
-                      {MAX_LIMIT - charCount}
-                   </div>
+                <div className={`text-[13px] ${isOverLimit ? "text-red-500" : "text-[var(--text-secondary)]"}`}>
+                  {MAX_LIMIT - charCount}
                 </div>
               )}
               <Button
                 disabled={isButtonDisabled}
                 type="submit"
                 isLoading={isSubmitting}
-                className={`rounded-full px-8 py-2.5 font-extrabold text-base transition-all shadow-md active:scale-95 ${
+                className={`rounded-full px-5 py-1.5 font-bold text-[15px] transition-all ${
                   isButtonDisabled 
-                    ? "bg-violet-600/50 text-white/50" 
-                    : "bg-violet-600 hover:bg-violet-700 text-white shadow-violet-500/20"
+                    ? "bg-[var(--accent-color)] opacity-50 text-white" 
+                    : "bg-[var(--accent-color)] hover:opacity-90 text-white"
                 }`}
               >
                 {isComment ? "Reply" : "Post"}

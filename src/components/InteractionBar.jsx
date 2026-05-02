@@ -74,53 +74,63 @@ function InteractionBar({
 
   return (
     <>
-    <div className="flex justify-between items-center max-w-sm mt-1 -ml-2">
+    <div className="flex justify-between items-center w-full mt-1 -ml-2 max-w-[425px]">
       {!isCommentCard && (
         <button
           onClick={handleCommentClick}
-          className="group flex items-center text-gray-500 dark:text-gray-500 hover:text-blue-500 transition-colors"
+          className="group flex items-center text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors"
           title="Reply"
         >
-          <div className="w-9 h-9 flex items-center justify-center rounded-full group-hover:bg-blue-500/10 transition-all">
-            <MessageCircle size={18} className="group-hover:scale-110 transition-transform" />
+          <div className="w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-[var(--accent-color)]/10 transition-all">
+            <MessageCircle size={18} />
           </div>
-          <span className="text-xs font-medium ml-1 group-hover:underline">
+          <span className="text-[13px] ml-1">
             {commentsCount > 0 ? commentsCount : ""}
           </span>
         </button>
       )}
 
-      {/* Placeholder for Retweet - added for visual completeness */}
-      <button className="group flex items-center text-gray-500 dark:text-gray-500 hover:text-green-500 transition-colors cursor-default opacity-50">
-        <div className="w-9 h-9 flex items-center justify-center rounded-full group-hover:bg-green-500/10 transition-all">
+      {/* Repost */}
+      <button className="group flex items-center text-[var(--text-secondary)] hover:text-green-500 transition-colors cursor-pointer">
+        <div className="w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-green-500/10 transition-all">
           <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
         </div>
+        <span className="text-[13px] ml-1">2</span>
       </button>
 
+      {/* Like */}
       <button
         onClick={handleLike}
         className={`group flex items-center transition-colors ${
           isLiked
             ? "text-rose-600"
-            : "text-gray-500 dark:text-gray-500 hover:text-rose-600"
+            : "text-[var(--text-secondary)] hover:text-rose-600"
         }`}
         title={isLiked ? "Unlike" : "Like"}
       >
-        <div className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${isLiked ? "group-hover:bg-rose-600/10" : "group-hover:bg-rose-600/10"}`}>
+        <div className={`w-8 h-8 flex items-center justify-center rounded-full transition-all group-hover:bg-rose-600/10`}>
           <Heart
             size={18}
-            className={`${isLiked ? "fill-current" : "fill-none"} transition-all duration-200 group-hover:scale-110 group-active:scale-125`}
+            className={`${isLiked ? "fill-current" : "fill-none"} transition-all duration-200 group-active:scale-125`}
           />
         </div>
-        <span className={`text-xs font-medium ml-1 ${isLiked ? "underline" : "group-hover:underline"}`}>
+        <span className="text-[13px] ml-1">
           {likesCount > 0 ? likesCount : ""}
         </span>
       </button>
 
-      {/* Placeholder for Share/Bookmark */}
-      <button className="group flex items-center text-gray-500 dark:text-gray-500 hover:text-violet-500 transition-colors cursor-default opacity-50">
-        <div className="w-9 h-9 flex items-center justify-center rounded-full group-hover:bg-violet-500/10 transition-all">
-          <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+      {/* View/Analytics icon */}
+      <button className="group flex items-center text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors cursor-pointer">
+        <div className="w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-[var(--accent-color)]/10 transition-all">
+           <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+        </div>
+        <span className="text-[13px] ml-1">10.5K</span>
+      </button>
+
+      {/* Share icon */}
+      <button className="group flex items-center text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors cursor-pointer">
+        <div className="w-8 h-8 flex items-center justify-center rounded-full group-hover:bg-[var(--accent-color)]/10 transition-all">
+           <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
         </div>
       </button>
     </div>
