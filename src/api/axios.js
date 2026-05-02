@@ -22,4 +22,36 @@ apiClient.interceptors.request.use(
   }
 );
 
+// Add response interceptor for automatic token refresh
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Check if error is 401 and we haven't retried yet
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/user/login") &&
+      !originalRequest.url.includes("/user/refresh-token")
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        // Attempt to refresh the token
+        await apiClient.post("/user/refresh-token");
+        
+        // Retry the original request
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // If refresh token fails, reject with the refresh error
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export default apiClient;
