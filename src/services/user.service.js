@@ -79,6 +79,36 @@ class UserService {
       throw error;
     }
   }
+
+  async searchUsers(query) {
+    try {
+      const response = await apiClient.get(`/user/search?query=${query}`);
+      return response.data;
+    } catch (error) {
+      console.error("UserService :: searchUsers :: error", error);
+      throw error;
+    }
+  }
+
+  async getRecommendedUsers() {
+    try {
+      const response = await apiClient.get(`/user/recommended`);
+      return response.data;
+    } catch (error) {
+      console.error("UserService :: getRecommendedUsers :: error", error);
+      throw error;
+    }
+  }
+
+  async getNotifications() {
+    try {
+      const response = await apiClient.get(`/notification`);
+      return response.data;
+    } catch (error) {
+      console.error("UserService :: getNotifications :: error", error);
+      throw error;
+    }
+  }
 }
 
 const userService = new UserService();
