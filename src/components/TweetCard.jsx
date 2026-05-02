@@ -34,21 +34,29 @@ function TweetCard({ tweet }) {
   };
 
   return (
-    <div className="px-4 py-3 border-b border-[var(--border-color)] hover:bg-[var(--bg-secondary)]/50 transition-all cursor-pointer group relative bg-[var(--bg-primary)]">
+    <div
+      className="px-4 py-3 transition-colors cursor-pointer group relative"
+      style={{ borderBottom: "1px solid var(--border-color)" }}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-secondary)"}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+    >
       <div className="flex gap-3">
         <Link
           to={`/u/${author?.username}`}
           onClick={(e) => e.stopPropagation()}
-          className="flex-shrink-0 pt-1"
+          className="flex-shrink-0 pt-0.5"
         >
           {author?.profileImage ? (
             <img
               src={author.profileImage}
-              className="h-10 w-10 rounded-full object-cover hover:opacity-90 transition-opacity"
+              className="h-10 w-10 rounded-full object-cover"
               alt="avatar"
             />
           ) : (
-            <div className="h-10 w-10 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--accent-color)] font-bold">
+            <div
+              className="h-10 w-10 rounded-full flex items-center justify-center font-bold"
+              style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
+            >
               {author?.username?.[0]?.toUpperCase() || "U"}
             </div>
           )}
@@ -60,22 +68,15 @@ function TweetCard({ tweet }) {
               <Link
                 to={`/u/${author?.username}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-1 group/author"
+                className="flex items-center gap-1"
               >
-                <span className="font-bold text-[var(--text-primary)] group-hover:underline truncate">
+                <span className="font-bold hover:underline truncate" style={{ color: "var(--text-primary)" }}>
                   {author?.fullName}
                 </span>
-                {author?.followers?.length > 10 && (
-                   <svg className="w-[18px] h-[18px] text-[var(--accent-color)] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                     <path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812z" />
-                   </svg>
-                )}
               </Link>
-              <span className="text-[var(--text-secondary)] truncate">
-                @{author?.username}
-              </span>
-              <span className="text-[var(--text-secondary)]">·</span>
-              <span className="text-[var(--text-secondary)] hover:underline whitespace-nowrap">
+              <span style={{ color: "var(--text-secondary)" }}>@{author?.username}</span>
+              <span style={{ color: "var(--text-secondary)" }}>·</span>
+              <span className="hover:underline whitespace-nowrap" style={{ color: "var(--text-secondary)" }}>
                 {formatRelativeTime(tweet.createdAt)}
               </span>
             </div>
@@ -86,7 +87,8 @@ function TweetCard({ tweet }) {
                   e.stopPropagation();
                   deleteTweet(e);
                 }}
-                className="p-2 -mr-2 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                className="p-2 -mr-2 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                style={{ color: "var(--text-secondary)" }}
               >
                 <Trash2 size={16} />
               </button>
@@ -94,7 +96,8 @@ function TweetCard({ tweet }) {
           </div>
 
           <p
-            className="mt-0.5 text-[15px] text-[var(--text-primary)] leading-normal whitespace-pre-wrap break-words cursor-pointer"
+            className="mt-0.5 text-[15px] leading-normal whitespace-pre-wrap break-words cursor-pointer"
+            style={{ color: "var(--text-primary)" }}
             onClick={handleContentClick}
           >
             {tweet.content}
@@ -102,7 +105,8 @@ function TweetCard({ tweet }) {
 
           {tweet?.imageURL && (
             <div
-              className="mt-3 rounded-2xl border border-[var(--border-color)] overflow-hidden cursor-pointer hover:opacity-95 transition-opacity"
+              className="mt-3 rounded-2xl overflow-hidden cursor-pointer"
+              style={{ border: "1px solid var(--border-color)" }}
               onClick={handleContentClick}
             >
               <img

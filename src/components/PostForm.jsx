@@ -112,7 +112,8 @@ function PostForm({
   return (
     <form
       onSubmit={handleSubmit(submit)}
-      className={`px-4 py-3 border-b border-[var(--border-color)] bg-[var(--bg-primary)]`}
+      className="px-4 py-3"
+      style={{ borderBottom: "1px solid var(--border-color)" }}
     >
       <div className="flex gap-3">
         <div className="flex-shrink-0 pt-1">
@@ -123,7 +124,10 @@ function PostForm({
               alt="avatar"
             />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--accent-color)] font-bold">
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center font-bold"
+              style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
+            >
               U
             </div>
           )}
@@ -132,7 +136,8 @@ function PostForm({
         <div className="flex-1 min-w-0">
           <textarea
             {...register("content")}
-            className="w-full bg-transparent text-xl outline-none resize-none text-[var(--text-primary)] placeholder-[var(--text-secondary)] min-h-[50px] mt-2"
+            className="w-full bg-transparent text-xl outline-none resize-none min-h-[56px] mt-2"
+            style={{ color: "var(--text-primary)" }}
             placeholder={isComment ? "Post your reply" : "What is happening?!"}
             rows={isComment ? "1" : "2"}
             onInput={(e) => {
@@ -143,7 +148,10 @@ function PostForm({
 
           {/* Image Preview */}
           {imagePreview && !isComment && (
-            <div className="relative mt-3 rounded-2xl overflow-hidden border border-[var(--border-color)]">
+            <div
+              className="relative mt-3 rounded-2xl overflow-hidden"
+              style={{ border: "1px solid var(--border-color)" }}
+            >
               <img
                 src={imagePreview}
                 alt="preview"
@@ -158,20 +166,26 @@ function PostForm({
                   const fileInput = document.getElementById("tweet-image");
                   if (fileInput) fileInput.value = "";
                 }}
-                className="absolute top-2 right-2 p-1.5 bg-[rgba(15,20,25,0.75)] hover:bg-[rgba(39,44,48,0.75)] rounded-full transition-all text-white backdrop-blur-sm"
+                className="absolute top-2 right-2 p-1.5 rounded-full transition-all text-white"
+                style={{ backgroundColor: "rgba(15,20,25,0.75)" }}
               >
                 <X size={18} />
               </button>
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-2 pt-2">
+          {/* Bottom toolbar */}
+          <div
+            className="flex items-center justify-between mt-3 pt-3"
+            style={{ borderTop: isComment ? "none" : "1px solid var(--border-color)" }}
+          >
             <div className="flex items-center -ml-2">
               {!isComment && (
                 <>
                   <label
                     htmlFor="tweet-image"
-                    className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full cursor-pointer transition-all"
+                    className="p-2 rounded-full cursor-pointer transition-colors"
+                    style={{ color: "var(--accent-color)" }}
                     title="Media"
                   >
                     <ImageIcon size={20} />
@@ -184,34 +198,25 @@ function PostForm({
                       {...register("image")}
                     />
                   </label>
-                  <button type="button" className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full transition-all" title="GIF">
-                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4H5a3 3 0 00-3 3v10a3 3 0 003 3h14a3 3 0 003-3V7a3 3 0 00-3-3zM5 18a1 1 0 01-1-1V7a1 1 0 011-1h14a1 1 0 011 1v10a1 1 0 01-1 1H5z"/><path d="M11 10h1v4h-1zM10 14h-1v-4h3v1h-2v1h1v1h-1v1zM15 10h3v1h-2v1h1v1h-1v1h-1v-4z"/></svg>
-                  </button>
-                  <button type="button" className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full transition-all" title="Poll">
-                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 5v14h12V5H6zm2 2h8v2H8V7zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/></svg>
-                  </button>
-                  <button type="button" className="p-2 text-[var(--accent-color)] hover:bg-[var(--accent-color)]/10 rounded-full transition-all" title="Emoji">
-                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 2a8 8 0 100 16 8 8 0 000-16zm-3.5 6a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm7 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm-3.5 4c2.5 0 4.5 1.5 4.5 3.5h-9c0-2 2-3.5 4.5-3.5z"/></svg>
-                  </button>
                 </>
               )}
             </div>
 
             <div className="flex items-center gap-3">
               {charCount > 0 && (
-                <div className={`text-[13px] ${isOverLimit ? "text-red-500" : "text-[var(--text-secondary)]"}`}>
+                <span className="text-[13px]" style={{ color: isOverLimit ? "#f4212e" : "var(--text-secondary)" }}>
                   {MAX_LIMIT - charCount}
-                </div>
+                </span>
               )}
               <Button
                 disabled={isButtonDisabled}
                 type="submit"
                 isLoading={isSubmitting}
-                className={`rounded-full px-5 py-1.5 font-bold text-[15px] transition-all ${
-                  isButtonDisabled 
-                    ? "bg-[var(--accent-color)] opacity-50 text-white" 
-                    : "bg-[var(--accent-color)] hover:opacity-90 text-white"
-                }`}
+                className="rounded-full px-5 py-1.5 font-bold text-[15px] text-white transition-opacity"
+                style={{
+                  backgroundColor: "var(--accent-color)",
+                  opacity: isButtonDisabled ? 0.5 : 1,
+                }}
               >
                 {isComment ? "Reply" : "Post"}
               </Button>

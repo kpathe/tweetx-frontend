@@ -6,110 +6,190 @@ import MobileBottomNav from "./MobileBottomNav";
 
 function MainLayout({ children }) {
   const userData = useSelector((state) => state.auth.userData);
-  const userAvatar = userData?.data?.user?.avatar;
 
   return (
-    <div className="flex min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] max-w-[1300px] mx-auto">
+    <div
+      className="flex min-h-screen mx-auto"
+      style={{
+        maxWidth: "1300px",
+        backgroundColor: "var(--bg-primary)",
+        color: "var(--text-primary)",
+      }}
+    >
       {/* Desktop Sidebar */}
-      <div className="hidden sm:flex flex-col sm:w-20 xl:w-[275px] sticky top-0 h-screen border-r border-[var(--border-color)] overflow-y-auto px-2">
+      <div
+        className="hidden sm:flex flex-col sm:w-[72px] xl:w-[275px] sticky top-0 h-screen overflow-y-auto px-2"
+        style={{ borderRight: "1px solid var(--border-color)" }}
+      >
         <Sidebar />
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-[600px] min-h-screen border-r border-[var(--border-color)] pb-20 sm:pb-0 relative">
+      <main
+        className="flex-1 min-h-screen pb-16 sm:pb-0 relative"
+        style={{
+          maxWidth: "600px",
+          borderRight: "1px solid var(--border-color)",
+        }}
+      >
         {/* Mobile Header */}
-        <div className="sm:hidden flex items-center justify-between px-4 py-3 sticky top-0 bg-[var(--bg-primary)] opacity-95 z-30 backdrop-blur-md border-b border-[var(--border-color)]">
-          <Link to="/" className="text-2xl font-bold text-[var(--accent-color)]">𝕏</Link>
+        <div
+          className="sm:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30"
+          style={{
+            backgroundColor: "var(--bg-primary)",
+            borderBottom: "1px solid var(--border-color)",
+          }}
+        >
+          <Link to="/" style={{ color: "var(--text-primary)" }}>
+            <span className="text-2xl font-black">𝕏</span>
+          </Link>
           <div className="flex items-center gap-2">
-             {userData?.data?.user?.profileImage ? (
-                <img src={userData.data.user.profileImage} className="w-8 h-8 rounded-full object-cover" />
-             ) : (
-                <div className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--accent-color)] text-xs font-bold">
-                  U
-                </div>
-             )}
+            {userData?.data?.user?.profileImage ? (
+              <img
+                src={userData.data.user.profileImage}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                style={{ backgroundColor: "var(--bg-tertiary)", color: "var(--accent-color)" }}
+              >
+                U
+              </div>
+            )}
           </div>
         </div>
         {children || <Outlet />}
       </main>
 
       {/* Right Sidebar */}
-      <aside className="hidden lg:block lg:w-[350px] xl:w-[400px] sticky top-0 h-screen p-4 overflow-y-auto">
+      <aside className="hidden lg:block lg:w-[350px] xl:w-[400px] sticky top-0 h-screen overflow-y-auto pl-6 pr-4 pt-2">
         <div className="space-y-4">
           {/* Search Bar */}
-          <div className="sticky top-0 bg-[var(--bg-primary)] pb-2 z-10">
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-[var(--text-secondary)] group-focus-within:text-[var(--accent-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="sticky top-0 pb-3 pt-1 z-10" style={{ backgroundColor: "var(--bg-primary)" }}>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
               <input
                 type="text"
                 placeholder="Search"
-                className="w-full pl-14 pr-4 py-3 rounded-full bg-[var(--bg-secondary)] border border-transparent focus:bg-transparent focus:border-[var(--accent-color)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-all outline-none"
+                className="w-full pl-12 pr-4 py-3 rounded-full outline-none transition-colors"
+                style={{
+                  backgroundColor: "var(--bg-secondary)",
+                  color: "var(--text-primary)",
+                  border: "1px solid transparent",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "var(--accent-color)";
+                  e.target.style.backgroundColor = "transparent";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "transparent";
+                  e.target.style.backgroundColor = "var(--bg-secondary)";
+                }}
               />
             </div>
           </div>
 
-          {/* Subscribe to Premium Card */}
-          <div className="p-4 bg-[var(--bg-secondary)] rounded-2xl border border-transparent space-y-3">
-             <h2 className="font-extrabold text-xl text-[var(--text-primary)]">Subscribe to Premium</h2>
-             <p className="text-[15px] text-[var(--text-primary)] font-medium leading-tight">
-               Subscribe to unlock new features and if eligible, receive a share of ads revenue.
-             </p>
-             <button className="bg-[var(--accent-color)] text-white px-5 py-2.5 rounded-full font-bold hover:opacity-90 transition-opacity">
-               Subscribe
-             </button>
+          {/* Subscribe to Premium */}
+          <div
+            className="p-4 rounded-2xl space-y-2"
+            style={{ backgroundColor: "var(--bg-secondary)" }}
+          >
+            <h2 className="font-extrabold text-xl" style={{ color: "var(--text-primary)" }}>
+              Subscribe to Premium
+            </h2>
+            <p className="text-[15px] leading-snug" style={{ color: "var(--text-primary)" }}>
+              Subscribe to unlock new features and if eligible, receive a share of ads revenue.
+            </p>
+            <button
+              className="px-4 py-2 rounded-full font-bold text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "var(--accent-color)" }}
+            >
+              Subscribe
+            </button>
           </div>
 
-          {/* Today's News / Trending Widget */}
-          <div className="bg-[var(--bg-secondary)] rounded-2xl border border-transparent overflow-hidden">
+          {/* What's happening */}
+          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: "var(--bg-secondary)" }}>
             <div className="p-4">
-              <h2 className="font-extrabold text-xl text-[var(--text-primary)]">
+              <h2 className="font-extrabold text-xl" style={{ color: "var(--text-primary)" }}>
                 What's happening
               </h2>
             </div>
-            <div className="">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="px-4 py-3 hover:bg-[var(--bg-tertiary)] cursor-pointer transition-colors group relative"
-                >
-                  <div className="flex justify-between">
-                    <div className="space-y-0.5">
-                      <div className="text-[13px] text-[var(--text-secondary)]">
-                        {i === 1 ? "Technology · Trending" : "Trending in India"}
-                      </div>
-                      <div className="font-bold text-[15px] text-[var(--text-primary)]">
-                        #{i === 1 ? "TweetX" : i === 2 ? "Sayantan" : i === 3 ? "ReactJS" : "ChaiAurCode"}
-                      </div>
-                      <div className="text-[13px] text-[var(--text-secondary)]">
-                        {10.5 * i}K Posts
-                      </div>
-                    </div>
-                    <button className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] p-1 rounded-full hover:bg-[var(--accent-color)]/10 transition-all h-fit">
-                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                       </svg>
-                    </button>
+            {[
+              { category: "Technology · Trending", tag: "#TweetX", posts: "10.5K" },
+              { category: "Trending in India", tag: "#Sayantan", posts: "21K" },
+              { category: "Trending in India", tag: "#ReactJS", posts: "31.5K" },
+              { category: "Technology · Trending", tag: "#ChaiAurCode", posts: "42K" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="px-4 py-3 cursor-pointer transition-colors"
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+              >
+                <div className="flex justify-between items-start">
+                  <div className="space-y-0.5">
+                    <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+                      {item.category}
+                    </p>
+                    <p className="font-bold text-[15px]" style={{ color: "var(--text-primary)" }}>
+                      {item.tag}
+                    </p>
+                    <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+                      {item.posts} Posts
+                    </p>
                   </div>
+                  <button
+                    className="p-1.5 rounded-full transition-colors"
+                    style={{ color: "var(--text-secondary)" }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--accent-color)";
+                      e.currentTarget.style.backgroundColor = "rgba(29,155,240,0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--text-secondary)";
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }}
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="5" r="2" />
+                      <circle cx="12" cy="12" r="2" />
+                      <circle cx="12" cy="19" r="2" />
+                    </svg>
+                  </button>
                 </div>
-              ))}
-            </div>
-            <button className="w-full p-4 text-left text-[var(--accent-color)] text-[15px] hover:bg-[var(--bg-tertiary)] transition-colors">
+              </div>
+            ))}
+            <button
+              className="w-full p-4 text-left text-[15px] transition-colors"
+              style={{ color: "var(--accent-color)" }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+            >
               Show more
             </button>
           </div>
-          
-          <footer className="px-4 py-4 text-[13px] text-[var(--text-secondary)] flex flex-wrap gap-x-3 gap-y-1">
+
+          {/* Footer */}
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[13px] py-2" style={{ color: "var(--text-secondary)" }}>
             <a href="#" className="hover:underline">Terms of Service</a>
             <a href="#" className="hover:underline">Privacy Policy</a>
             <a href="#" className="hover:underline">Cookie Policy</a>
             <a href="#" className="hover:underline">Accessibility</a>
             <a href="#" className="hover:underline">Ads info</a>
             <span>© 2026 TweetX Corp.</span>
-          </footer>
+          </div>
         </div>
       </aside>
 
