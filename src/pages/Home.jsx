@@ -37,7 +37,7 @@ function Home() {
   if (loading)
     return (
       <Container>
-        <div className="flex justify-center items-center py-12">
+        <div className="flex flex-col items-center justify-center py-12">
           <Spinner size="lg" />
         </div>
       </Container>

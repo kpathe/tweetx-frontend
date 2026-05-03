@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { LogoutBtn } from "../index";
-import { Link } from "react-router-dom";
+import authService from "../../services/auth.service";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { Home, Search, Bell, UserPlus, User, Moon, Sun } from "lucide-react";
+import { Home, Search, Bell, UserPlus, User, Moon, Sun, LogOut } from "lucide-react";
 import { light, dark } from "../../store/themeSlice";
+import { logout } from "../../store/authSlice";
 import userService from "../../services/user.service";
 import Avatar from "../Avatar";
 
@@ -12,6 +13,7 @@ function Sidebar() {
   const authStatus = useSelector((state) => state.auth.status);
   const themeMode = useSelector((state) => state.theme.themeMode);
   const location = useLocation();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   const username = userData?.data?.user?.username || "me";
   const dispatch = useDispatch();
@@ -110,6 +112,27 @@ function Sidebar() {
               </span>
             </button>
           </div>
+
+          {/* Logout */}
+          <div className="flex xl:justify-start justify-center">
+            <button
+              onClick={() => {
+                authService.logout().then(() => {
+                  dispatch(logout());
+                  navigate("/");
+                });
+              }}
+              className="flex items-center gap-5 py-3 px-3 rounded-full transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--bg-tertiary)"}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+            >
+              <LogOut size={26} />
+              <span className="text-xl hidden xl:block pr-4">
+                Logout
+              </span>
+            </button>
+          </div>
         </nav>
       </div>
 
@@ -139,7 +162,6 @@ function Sidebar() {
                   @{username}
                 </p>
               </div>
-              <LogoutBtn />
             </div>
           </Link>
         </div>

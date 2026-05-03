@@ -46,7 +46,14 @@ function Signup() {
         }
       }
     } catch (error) {
-      setError(error.response?.data?.message || error.message);
+      // Custom error messages for user already exists
+      let msg =
+        error?.response?.data?.message?.toLowerCase() || error.message?.toLowerCase() || "";
+      if (msg.includes("already exists") || msg.includes("duplicate") || msg.includes("taken")) {
+        setError("An account with this email or username already exists.");
+      } else {
+        setError("Failed to create account. Please check your details or try again later.");
+      }
     } finally {
       setIsLoading(false);
     }

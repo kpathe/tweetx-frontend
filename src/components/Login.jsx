@@ -27,7 +27,14 @@ function Login() {
         }
       }
     } catch (error) {
-      setError(error.message);
+      // Custom error messages for wrong credentials
+      let msg =
+        error?.response?.data?.message?.toLowerCase() || error.message?.toLowerCase() || "";
+      if (msg.includes("invalid") || msg.includes("not found") || msg.includes("wrong")) {
+        setError("Incorrect email or password. Please try again.");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     } finally {
       setIsLoading(false);
     }

@@ -1,12 +1,27 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "../components/sidebar/Sidebar";
 import MobileBottomNav from "./MobileBottomNav";
 import Avatar from "../components/Avatar";
+import { LogOut, Moon, Sun } from "lucide-react";
+import { light, dark } from "../store/themeSlice";
+import { logout } from "../store/authSlice";
+import authService from "../services/auth.service";
 
 function MainLayout({ children }) {
   const userData = useSelector((state) => state.auth.userData);
+  const themeMode = useSelector((state) => state.theme.themeMode);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isDark = themeMode === "dark";
+
+  const handleLogout = () => {
+    authService.logout().then(() => {
+      dispatch(logout());
+      navigate("/");
+    });
+  };
 
   return (
     <div
@@ -44,7 +59,25 @@ function MainLayout({ children }) {
           <Link to="/" style={{ color: "var(--text-primary)" }}>
             <span className="text-2xl font-black">𝕏</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            {/* Theme Toggle */}
+            <button
+              onClick={() => dispatch(isDark ? light() : dark())}
+              className="p-2 rounded-full transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              title={isDark ? "Light mode" : "Dark mode"}
+            >
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-full transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              title="Logout"
+            >
+              <LogOut size={20} />
+            </button>
             <Avatar
               src={userData?.data?.user?.profileImage}
               name={userData?.data?.user?.fullName}

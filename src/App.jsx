@@ -30,8 +30,8 @@ function App() {
 
   if (loader) {
     return (
-      <div className="h-screen flex items-center justify-center bg-white dark:bg-slate-950">
-        <Spinner size="lg" className="text-violet-600 dark:text-violet-400" />
+      <div  className="min-h-screen flex justify-center items-center">
+        <h1 className="text-3xl font-semibold text-neutral-900 transition-colors duration-300 animate-pulse">Wait while deployment runs</h1>
       </div>
     );
   }
