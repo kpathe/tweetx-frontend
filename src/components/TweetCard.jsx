@@ -31,7 +31,7 @@ function TweetCard({ tweet }) {
   const handleContentClick = () => {
     window.location.href = `/tweet/${tweet?._id}`;
 
-    console.log("TweetCard render", tweet._id, tweet.commentsCount);
+    // console.log("TweetCard render", tweet._id, tweet.commentsCount);
   };
 
   return (

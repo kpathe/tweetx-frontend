@@ -30,7 +30,7 @@ const tweetSlice = createSlice({
     // any stale count the backend may have returned in the feed.
     setTweetCommentsCount: (state, action) => {
       const { tweetId, count } = action.payload;
-      console.log("reducer hit", { tweetId, count, allTweets: state.allTweets.map(t => t._id) });
+      // console.log("reducer hit", { tweetId, count, allTweets: state.allTweets.map(t => t._id) });
       state.allTweets = state.allTweets.map((tweet) =>
         tweet._id === tweetId
           ? { ...tweet, commentsCount: count }
