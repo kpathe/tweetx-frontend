@@ -19,7 +19,7 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
 
   const signup = async (data) => {
-    console.log(data);
+    // console.log(data);
     setError("");
     setIsLoading(true);
     try {
@@ -31,10 +31,6 @@ function Signup() {
 
       if (data.profileImage && data.profileImage[0]) {
         formData.append("profileImage", data.profileImage[0]);
-      }
-
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
       }
 
       const session = await authService.signup(formData);
