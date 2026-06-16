@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MessageCircle, Heart } from "lucide-react";
 import interactionService from "../services/interaction.service";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,10 +14,27 @@ function InteractionBar({
 }) {
   const currentUser = useSelector((state) => state.auth.userData?.data);
   const dispatch = useDispatch();
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
-  const [internalCommentsCount, setInternalCommentsCount] = useState(0);
+  const [optimisticLike, setOptimisticLike] = useState({
+    tweetId: null,
+    liked: null,
+    countDelta: 0,
+  });
+  const [commentDeltaByTweet, setCommentDeltaByTweet] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const userId = currentUser?.user?._id;
+  const tweetId = tweet?._id;
+  const baseIsLiked = tweet?.likes?.includes(userId) || !!tweet?.isLiked;
+  const baseLikesCount = tweet?.likes?.length ?? tweet?.likesCount ?? 0;
+  const likeState =
+    optimisticLike.tweetId === tweetId
+      ? optimisticLike
+      : { liked: null, countDelta: 0 };
+  const isLiked = likeState.liked ?? baseIsLiked;
+  const likesCount = Math.max(0, baseLikesCount + likeState.countDelta);
+  const internalCommentsCount =
+    (tweet?.commentsCount ?? tweet?.comments?.length ?? 0) +
+    (commentDeltaByTweet[tweetId] || 0);
 
   // If a commentsCount prop is passed in (from TweetDetailCard/TweetPage),
   // use it as the source of truth. Otherwise fall back to internal state
@@ -25,32 +42,25 @@ function InteractionBar({
   const commentsCount =
     commentsCountProp !== undefined ? commentsCountProp : internalCommentsCount;
 
-  useEffect(() => {
-    const userId = currentUser?.user?._id;
-    const actualCount = tweet?.commentsCount ?? tweet?.comments?.length ?? 0;
-
-    setIsLiked(tweet?.likes?.includes(userId) || !!tweet?.isLiked);
-    setLikesCount(tweet?.likes?.length || tweet?.likesCount || 0);
-    setInternalCommentsCount(actualCount);
-  }, [tweet, currentUser]);
-
   const handleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     const wasLiked = isLiked;
     try {
-      setIsLiked(!wasLiked);
-      setLikesCount((prev) => (wasLiked ? prev - 1 : prev + 1));
+      setOptimisticLike({
+        tweetId,
+        liked: !wasLiked,
+        countDelta: wasLiked ? -1 : 1,
+      });
 
       if (isCommentCard) {
-        await interactionService.toggleCommentLike(tweet._id);
+        await interactionService.toggleCommentLike(tweetId);
       } else {
-        await interactionService.toggleTweetLike(tweet._id);
+        await interactionService.toggleTweetLike(tweetId);
       }
-    } catch (error) {
-      setIsLiked(wasLiked);
-      setLikesCount((prev) => (wasLiked ? prev + 1 : prev - 1));
+    } catch {
+      setOptimisticLike({ tweetId: null, liked: null, countDelta: 0 });
     }
   };
 
@@ -63,9 +73,11 @@ function InteractionBar({
   const handleCommentSuccess = (newComment) => {
     setIsModalOpen(false);
     if (commentsCountProp === undefined) {
-      // Feed card context — update both local state and Redux store
-      setInternalCommentsCount((prev) => prev + 1);
-      dispatch(updateTweetCommentsCount({ tweetId: tweet._id, delta: +1 }));
+      setCommentDeltaByTweet((prev) => ({
+        ...prev,
+        [tweetId]: (prev[tweetId] || 0) + 1,
+      }));
+      dispatch(updateTweetCommentsCount({ tweetId, delta: +1 }));
     }
     if (onCommentAdded) {
       onCommentAdded(newComment);
@@ -128,7 +140,7 @@ function InteractionBar({
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <PostForm
           isComment={true}
-          parentId={tweet._id}
+          parentId={tweetId}
           onSuccess={handleCommentSuccess}
         />
       </Modal>
@@ -136,4 +148,4 @@ function InteractionBar({
   );
 }
 
-export default InteractionBar;
+export default InteractionBar;

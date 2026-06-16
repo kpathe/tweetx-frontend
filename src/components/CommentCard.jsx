@@ -8,7 +8,7 @@ import interactionService from "../services/interaction.service";
 import Avatar from "./Avatar";
 
 function CommentCard({ comment, onCommentDelete }) {
-  const currentUser = useSelector((state) => state.auth.userData.data);
+  const currentUser = useSelector((state) => state.auth.userData?.data);
   const author = comment.owner;
   const [isDeleting, setIsDeleting] = useState(false);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const FeedTabs = ({ activeTab, setActiveTab }) => {
   const tabs = ["For you", "Following"];

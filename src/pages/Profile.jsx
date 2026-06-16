@@ -27,10 +27,7 @@ function Profile() {
         const userProfile = await userService.getProfile(username);
         if (userProfile?.data) {
           setUser(userProfile.data);
-          const isMeInFollowers = userProfile.data.followers.some(
-            (follower) => follower.username === loggedInUser?.username,
-          );
-          setIsFollowing(isMeInFollowers);
+          setIsFollowing(Boolean(userProfile.data.isFollowing));
         }
 
         const tweetsResponse = await tweetService.getUserTweets(username);
@@ -46,7 +43,7 @@ function Profile() {
     };
 
     fetchProfileData();
-  }, [username, loggedInUser?.username, dispatch]);
+  }, [username, dispatch]);
 
   const handleFollowToggle = async () => {
     const previousState = isFollowing;
@@ -64,7 +61,7 @@ function Profile() {
       } else {
         await userService.follow(user?._id);
       }
-    } catch (error) {
+    } catch {
       setIsFollowing(previousState);
       setUser((prev) => ({
         ...prev,

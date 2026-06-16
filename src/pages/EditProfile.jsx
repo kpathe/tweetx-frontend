@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Camera, X } from "lucide-react";
 import { Input, Button } from "../components";
@@ -18,7 +18,7 @@ function EditProfile() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { isSubmitting },
   } = useForm({
     defaultValues: {
@@ -28,7 +28,7 @@ function EditProfile() {
   });
 
   // Handle Image Preview
-  const imageFile = watch("profileImage");
+  const imageFile = useWatch({ control, name: "profileImage" });
   React.useEffect(() => {
     if (imageFile && imageFile[0]) {
       const url = URL.createObjectURL(imageFile[0]);
@@ -55,7 +55,7 @@ function EditProfile() {
         navigate(`/u/${updatedUserData?.data?.user?.username}`);
       }
     } catch (err) {
-      setError(err.message || "Failed to update profile");
+      setError(err?.response?.data?.message || err.message || "Failed to update profile");
     }
   };
 
@@ -68,7 +68,7 @@ function EditProfile() {
         await userService.deleteAccount();
         navigate("/signup");
       } catch (err) {
-        setError("Could not delete account. Try again later.");
+        setError(err?.response?.data?.message || "Could not delete account. Try again later.");
       }
     }
   };

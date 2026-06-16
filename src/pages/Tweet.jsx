@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateTweetCommentsCount, setTweetCommentsCount } from "../store/tweetSlice";
@@ -18,7 +18,7 @@ function TweetPage() {
   const [commentsCount, setCommentsCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [tRes, cRes] = await Promise.all([
         tweetService.getTweet(tweetId),
@@ -37,7 +37,7 @@ function TweetPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch, tweetId]);
 
   const handleCommentDelete = (commentId) => {
     setComments((prev) => prev.filter((c) => c._id !== commentId));
@@ -58,7 +58,7 @@ function TweetPage() {
 
   useEffect(() => {
     fetchData();
-  }, [tweetId]);
+  }, [fetchData]);
 
   if (loading)
     return (

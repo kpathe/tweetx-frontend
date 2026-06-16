@@ -29,7 +29,7 @@ function Sidebar() {
           const unread = response.data.filter((n) => !n.isRead).length;
           setUnreadCount(unread);
         }
-      } catch (err) {
+      } catch {
         // silently fail
       }
     };

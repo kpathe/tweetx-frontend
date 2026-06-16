@@ -2,14 +2,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeTweet } from "../store/tweetSlice";
 import tweetService from "../services/tweet.service";
 import InteractionBar from "./InteractionBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { formatRelativeTime } from "../utils/formatTime";
 import { Trash2 } from "lucide-react";
 import Avatar from "./Avatar";
 
 function TweetCard({ tweet }) {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.auth.userData.data);
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.auth.userData?.data);
 
   const author = tweet?.author;
   const isOwner = currentUser?.user?._id === author?._id;
@@ -29,9 +30,7 @@ function TweetCard({ tweet }) {
   };
 
   const handleContentClick = () => {
-    window.location.href = `/tweet/${tweet?._id}`;
-
-    // console.log("TweetCard render", tweet._id, tweet.commentsCount);
+    navigate(`/tweet/${tweet?._id}`);
   };
 
   return (
