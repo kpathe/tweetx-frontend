@@ -3,14 +3,19 @@ import userService from "../src/services/user.service";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./store/authSlice"; 
 import { Outlet } from "react-router-dom";
-import { Spinner } from "./components";
+import { clearSessionHint, hasSessionHint } from "./utils/sessionHint";
 
 function App() {
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(() => hasSessionHint());
   const dispatch = useDispatch();
   const themeMode = useSelector((state) => state.theme.themeMode);
 
   useEffect(() => {
+    if (!hasSessionHint()) {
+      dispatch(logout());
+      return;
+    }
+
     userService
       .getCurrentUser()
       .then((userData) => {
@@ -19,6 +24,10 @@ function App() {
         } else {
           dispatch(logout());
         }
+      })
+      .catch(() => {
+        clearSessionHint();
+        dispatch(logout());
       })
       .finally(() => setLoader(false));
   }, [dispatch]);

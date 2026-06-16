@@ -8,6 +8,7 @@ import { LogOut, Moon, Sun } from "lucide-react";
 import { light, dark } from "../store/themeSlice";
 import { logout } from "../store/authSlice";
 import authService from "../services/auth.service";
+import { clearSessionHint } from "../utils/sessionHint";
 
 function MainLayout({ children }) {
   const userData = useSelector((state) => state.auth.userData);
@@ -18,6 +19,7 @@ function MainLayout({ children }) {
 
   const handleLogout = () => {
     authService.logout().then(() => {
+      clearSessionHint();
       dispatch(logout());
       navigate("/");
     });

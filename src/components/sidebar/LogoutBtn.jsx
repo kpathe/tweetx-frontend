@@ -4,6 +4,7 @@ import { logout } from "../../store/authSlice";
 import { useDispatch } from "react-redux";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { clearSessionHint } from "../../utils/sessionHint";
 
 function LogoutBtn() {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ function LogoutBtn() {
 
   const logoutHandler = () => {
     authService.logout().then(() => {
+      clearSessionHint();
       dispatch(logout());
       navigate("/");
     });

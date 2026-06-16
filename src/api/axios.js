@@ -1,5 +1,6 @@
 import axios from "axios";
 import conf from "../conf/conf";
+import { clearSessionHint } from "../utils/sessionHint";
 
 const apiClient = axios.create({
   baseURL: conf.apiUrl,
@@ -45,6 +46,7 @@ apiClient.interceptors.response.use(
         // Retry the original request
         return apiClient(originalRequest);
       } catch (refreshError) {
+        clearSessionHint();
         // If refresh token fails, reject with the refresh error
         return Promise.reject(refreshError);
       }

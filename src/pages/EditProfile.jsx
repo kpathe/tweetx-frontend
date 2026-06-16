@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Camera, X } from "lucide-react";
 import { Input, Button } from "../components";
 import userService from "../services/user.service";
-import { login } from "../store/authSlice";
+import { login, logout } from "../store/authSlice";
+import { clearSessionHint } from "../utils/sessionHint";
 
 function EditProfile() {
   const { userData } = useSelector((state) => state.auth);
@@ -66,6 +67,8 @@ function EditProfile() {
     if (confirmDelete) {
       try {
         await userService.deleteAccount();
+        clearSessionHint();
+        dispatch(logout());
         navigate("/signup");
       } catch (err) {
         setError(err?.response?.data?.message || "Could not delete account. Try again later.");

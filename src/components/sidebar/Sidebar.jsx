@@ -8,6 +8,7 @@ import { light, dark } from "../../store/themeSlice";
 import { logout } from "../../store/authSlice";
 import userService from "../../services/user.service";
 import Avatar from "../Avatar";
+import { clearSessionHint } from "../../utils/sessionHint";
 
 function Sidebar() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -118,6 +119,7 @@ function Sidebar() {
             <button
               onClick={() => {
                 authService.logout().then(() => {
+                  clearSessionHint();
                   dispatch(logout());
                   navigate("/");
                 });

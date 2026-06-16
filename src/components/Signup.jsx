@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import authService from "../services/auth.service";
 import userService from "../services/user.service";
 import { useForm } from "react-hook-form";
+import { setSessionHint } from "../utils/sessionHint";
 
 function Signup() {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ function Signup() {
 
       const session = await authService.signup(formData);
       if (session) {
+        setSessionHint();
         const userData = await userService.getCurrentUser();
         if (userData) {
           dispatch(login(userData));
